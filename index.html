@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/daese-teacher-clinic-dashboard/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="clinic_writing">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>clinic_writing</title>
+  <link rel="manifest" href="manifest.json">
+  <script>
+    window.clinicLoadGenerationHistory = function() {
+      try {
+        return window.localStorage.getItem('clinic_writing_generation_history_v1') || '[]';
+      } catch (error) {
+        return '[]';
+      }
+    };
+
+    window.clinicSaveGenerationHistory = function(json) {
+      try {
+        window.localStorage.setItem('clinic_writing_generation_history_v1', json || '[]');
+      } catch (error) {}
+    };
+
+    window.clinicLoadTeacherPreferences = function() {
+      try {
+        return window.localStorage.getItem('clinic_writing_teacher_preferences_v1') || '{}';
+      } catch (error) {
+        return '{}';
+      }
+    };
+
+    window.clinicSaveTeacherPreferences = function(json) {
+      try {
+        window.localStorage.setItem('clinic_writing_teacher_preferences_v1', json || '{}');
+      } catch (error) {}
+    };
+
+    function clinicLogoUrl() {
+      return new URL('assets/assets/logo.jpg', window.location.href).href;
+    }
+
+    function hydrateWorksheetHtml(content) {
+      return String(content || '').replace(/__LOGO_URL__/g, clinicLogoUrl());
+    }
+
+    window.clinicPrintWorksheet = function(title, rightHeader, content) {
+      var printWindow = window.open('', '_blank', 'width=960,height=1200');
+      if (!printWindow) {
+        window.print();
+        return true;
+      }
+
+      var source = hydrateWorksheetHtml(content);
+      if (source.indexOf('<!DOCTYPE html>') < 0 && source.indexOf('<html') < 0) {
+        source = [
+          '<!DOCTYPE html>',
+          '<html lang="ko">',
+          '<head>',
+          '<meta charset="UTF-8">',
+          '<title>' + (title || 'Worksheet') + '</title>',
+          '<style>',
+          '@page { size: A4; margin: 14mm; }',
+          'body { color: #252525; font-family: Arial, "Malgun Gothic", sans-serif; line-height: 1.55; margin: 0; }',
+          'pre { font: inherit; margin: 0; white-space: pre-wrap; }',
+          '</style>',
+          '</head>',
+          '<body><pre></pre></body>',
+          '</html>'
+        ].join('');
+      }
+
+      var doc = printWindow.document;
+      doc.open();
+      doc.write(source);
+      doc.close();
+      doc.title = title || 'Worksheet';
+
+      var printWhenReady = function() {
+        printWindow.focus();
+        printWindow.print();
+      };
+
+      if (doc.fonts && doc.fonts.ready) {
+        doc.fonts.ready.then(function() {
+          setTimeout(printWhenReady, 100);
+        }).catch(function() {
+          setTimeout(printWhenReady, 250);
+        });
+      } else {
+        setTimeout(printWhenReady, 250);
+      }
+
+      return true;
+    };
+
+    window.clinicDownloadWorksheetFile = function(fileName, content) {
+      try {
+        var hydrated = hydrateWorksheetHtml(content);
+        var blob = new Blob([hydrated], { type: 'text/html;charset=utf-8' });
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName || 'writing-worksheet.html';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(function() {
+          URL.revokeObjectURL(link.href);
+          link.remove();
+        }, 0);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    };
+  </script>
+</head>
+<body>
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
