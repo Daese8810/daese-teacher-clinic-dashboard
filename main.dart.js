@@ -45411,7 +45411,7 @@ A.az2.prototype={
 $1(a){return a.p(0,B.au)?B.j:this.a.a},
 $S:6}
 A.KK.prototype={
-D(a){return new A.B3(B.Gj,"Clinic Writing",A.aKv(B.f0),!1,null)}}
+D(a){return new A.B3(B.Gj,"\ub300\uc138\uc601\uc5b4 \uad00\ub9ac \ud504\ub85c\uadf8\ub7a8",A.aKv(B.f0),!1,null)}}
 A.z2.prototype={
 ak(){return new A.F2(B.Po)}}
 A.F2.prototype={
