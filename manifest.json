@@ -1,11 +1,11 @@
 {
-    "name": "clinic_writing",
-    "short_name": "clinic_writing",
+    "name": "대세영어 관리 프로그램",
+    "short_name": "대세영어",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFF8F3",
+    "theme_color": "#FF6B22",
+    "description": "대세영어 교수팀 관리 프로그램",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
