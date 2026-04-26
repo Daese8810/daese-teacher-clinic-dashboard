@@ -51148,13 +51148,14 @@ q=A.aV(s.aW(0.18),1)
 return A.aa(p,A.ar(A.b([A.F("\ud559\uc0dd\ubcc4 \ud074\ub9ac\ub2c9 \uacb0\uacfc",p,p,p,p,A.a9(p,p,o.w,p,p,p,p,p,p,p,p,p,p,p,B.r,p,p,!0,p,p,p,p,p,p,p,p),p,p,p),B.aG,A.dj(new A.ava(this))],t.p),B.N,B.e,B.h),B.i,p,p,new A.ac(o.e,p,q,r,p,p,B.o),p,p,p,B.bX,p,p,p)}}
 A.ava.prototype={
 $2(a,b){var s,r,q,p,o,n,m,l,k,j=b.b
-if(j>=1180)s=4
-else s=j>=860?2:1
-r=s===1?0:10
-q=(j-r*(s-1))/s
+if(j>=1320)s=8
+else if(j>=1180)s=4
+else{r=j>=860?2:1
+s=r}q=s===1?0:8
+p=(j-q*(s-1))/s
 j=A.b([],t.p)
-for(p=this.a,o=p.d.f,n=o.length,m=p.c,p=p.e,l=0;l<o.length;o.length===n||(0,A.x)(o),++l){k=o[l]
-j.push(new A.bq(q,null,new A.Wo(m,k,p.PR(k),null),null))}return A.dB(B.ar,j,B.aR,10,r)},
+for(r=this.a,o=r.d.f,n=o.length,m=r.c,r=r.e,l=0;l<o.length;o.length===n||(0,A.x)(o),++l){k=o[l]
+j.push(new A.bq(p,null,new A.Wo(m,k,r.PR(k),null),null))}return A.dB(B.ar,j,B.aR,10,q)},
 $S:35}
 A.Wo.prototype={
 v(a){var s=null,r=this.c,q=A.a3(16),p=A.aV(r.y,1),o=this.e,n=t.p
