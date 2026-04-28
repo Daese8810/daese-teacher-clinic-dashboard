@@ -91,6 +91,20 @@
       } catch (error) {}
     };
 
+    window.clinicLoadExamScores = function() {
+      try {
+        return window.localStorage.getItem('clinic_exam_scores_v1') || '{}';
+      } catch (error) {
+        return '{}';
+      }
+    };
+
+    window.clinicSaveExamScores = function(json) {
+      try {
+        window.localStorage.setItem('clinic_exam_scores_v1', json || '{}');
+      } catch (error) {}
+    };
+
     function clinicLogoUrl() {
       return new URL('assets/assets/logo.jpg', window.location.href).href;
     }
