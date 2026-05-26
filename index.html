@@ -251,6 +251,224 @@
         return false;
       }
     };
+
+    function clinicDownloadBlob(fileName, blob) {
+      var objectUrl = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = fileName || 'clinic-file';
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      if (typeof MouseEvent === 'function') {
+        link.dispatchEvent(new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        }));
+      } else {
+        link.click();
+      }
+      setTimeout(function() {
+        URL.revokeObjectURL(objectUrl);
+        link.remove();
+      }, 60000);
+      return true;
+    }
+
+    function clinicCanvasToBlob(canvas, type, quality) {
+      return new Promise(function(resolve, reject) {
+        canvas.toBlob(function(blob) {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('canvas blob conversion failed'));
+          }
+        }, type, quality);
+      });
+    }
+
+    function clinicSvgTextToCanvas(page, scale) {
+      return new Promise(function(resolve, reject) {
+        var svg = String(page.svg || '');
+        var width = Number(page.width || 595);
+        var height = Number(page.height || 842);
+        var blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+        var objectUrl = URL.createObjectURL(blob);
+        var image = new Image();
+        image.onload = function() {
+          try {
+            var canvas = document.createElement('canvas');
+            canvas.width = Math.round(width * scale);
+            canvas.height = Math.round(height * scale);
+            var context = canvas.getContext('2d');
+            context.fillStyle = '#ffffff';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            URL.revokeObjectURL(objectUrl);
+            resolve({ canvas: canvas, width: width, height: height });
+          } catch (error) {
+            URL.revokeObjectURL(objectUrl);
+            reject(error);
+          }
+        };
+        image.onerror = function() {
+          URL.revokeObjectURL(objectUrl);
+          reject(new Error('SVG render failed'));
+        };
+        image.src = objectUrl;
+      });
+    }
+
+    function clinicParseSvgPages(pagesJson) {
+      var pages = JSON.parse(String(pagesJson || '[]'));
+      if (!Array.isArray(pages) || pages.length === 0) {
+        throw new Error('empty report pages');
+      }
+      return pages;
+    }
+
+    window.clinicDownloadSvgReportPng = async function(fileName, pagesJson) {
+      try {
+        var pages = clinicParseSvgPages(pagesJson);
+        var scale = 3;
+        var rendered = [];
+        for (var index = 0; index < pages.length; index += 1) {
+          rendered.push(await clinicSvgTextToCanvas(pages[index], scale));
+        }
+        var gap = rendered.length <= 1 ? 0 : Math.round(72 * scale);
+        var width = rendered.reduce(function(max, item) {
+          return Math.max(max, item.canvas.width);
+        }, 0);
+        var height = rendered.reduce(function(sum, item) {
+          return sum + item.canvas.height;
+        }, 0) + gap * (rendered.length - 1);
+        var output = document.createElement('canvas');
+        output.width = width;
+        output.height = height;
+        var context = output.getContext('2d');
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, width, height);
+        var top = 0;
+        rendered.forEach(function(item) {
+          var left = Math.round((width - item.canvas.width) / 2);
+          context.drawImage(item.canvas, left, top);
+          top += item.canvas.height + gap;
+        });
+        var blob = await clinicCanvasToBlob(output, 'image/png');
+        return clinicDownloadBlob(fileName || 'monthly-report.png', blob);
+      } catch (error) {
+        console.error('clinicDownloadSvgReportPng failed', error);
+        return false;
+      }
+    };
+
+    function clinicAsciiBytes(text) {
+      return new TextEncoder().encode(String(text || ''));
+    }
+
+    async function clinicImageBytesFromCanvas(canvas) {
+      var blob = await clinicCanvasToBlob(canvas, 'image/jpeg', 0.92);
+      return new Uint8Array(await blob.arrayBuffer());
+    }
+
+    function clinicCreateImagePdf(rendered, imageBytes) {
+      var chunks = [];
+      var offsets = [0];
+      var position = 0;
+
+      function push(part) {
+        var bytes = typeof part === 'string' ? clinicAsciiBytes(part) : part;
+        chunks.push(bytes);
+        position += bytes.length;
+      }
+
+      function addObject(id, parts) {
+        offsets[id] = position;
+        push(id + ' 0 obj\n');
+        parts.forEach(push);
+        push('\nendobj\n');
+      }
+
+      var pageCount = rendered.length;
+      var maxObjectId = 2 + pageCount * 3;
+      push('%PDF-1.3\n');
+      addObject(1, ['<< /Type /Catalog /Pages 2 0 R >>']);
+      var kids = [];
+      for (var i = 0; i < pageCount; i += 1) {
+        kids.push((3 + i * 3) + ' 0 R');
+      }
+      addObject(2, ['<< /Type /Pages /Kids [', kids.join(' '), '] /Count ', String(pageCount), ' >>']);
+
+      for (var pageIndex = 0; pageIndex < pageCount; pageIndex += 1) {
+        var pageObj = 3 + pageIndex * 3;
+        var contentObj = pageObj + 1;
+        var imageObj = pageObj + 2;
+        var page = rendered[pageIndex];
+        var mediaWidth = Number(page.width || 595);
+        var mediaHeight = Number(page.height || 842);
+        var draw = 'q\n' + mediaWidth + ' 0 0 ' + mediaHeight + ' 0 0 cm\n/Im' + pageIndex + ' Do\nQ\n';
+        var image = imageBytes[pageIndex];
+        addObject(pageObj, [
+          '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ',
+          String(mediaWidth),
+          ' ',
+          String(mediaHeight),
+          '] /Resources << /XObject << /Im',
+          String(pageIndex),
+          ' ',
+          String(imageObj),
+          ' 0 R >> >> /Contents ',
+          String(contentObj),
+          ' 0 R >>'
+        ]);
+        addObject(contentObj, [
+          '<< /Length ',
+          String(clinicAsciiBytes(draw).length),
+          ' >>\nstream\n',
+          draw,
+          'endstream'
+        ]);
+        offsets[imageObj] = position;
+        push(imageObj + ' 0 obj\n');
+        push('<< /Type /XObject /Subtype /Image /Width ' + page.canvas.width +
+          ' /Height ' + page.canvas.height +
+          ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' +
+          image.length + ' >>\nstream\n');
+        push(image);
+        push('\nendstream\nendobj\n');
+      }
+
+      var xrefOffset = position;
+      push('xref\n0 ' + (maxObjectId + 1) + '\n');
+      push('0000000000 65535 f \n');
+      for (var objectId = 1; objectId <= maxObjectId; objectId += 1) {
+        push(String(offsets[objectId]).padStart(10, '0') + ' 00000 n \n');
+      }
+      push('trailer\n<< /Size ' + (maxObjectId + 1) + ' /Root 1 0 R >>\n');
+      push('startxref\n' + xrefOffset + '\n%%EOF');
+      return new Blob(chunks, { type: 'application/pdf' });
+    }
+
+    window.clinicDownloadSvgReportPdf = async function(fileName, pagesJson) {
+      try {
+        var pages = clinicParseSvgPages(pagesJson);
+        var scale = 2.4;
+        var rendered = [];
+        var imageBytes = [];
+        for (var index = 0; index < pages.length; index += 1) {
+          var page = await clinicSvgTextToCanvas(pages[index], scale);
+          rendered.push(page);
+          imageBytes.push(await clinicImageBytesFromCanvas(page.canvas));
+        }
+        var pdf = clinicCreateImagePdf(rendered, imageBytes);
+        return clinicDownloadBlob(fileName || 'monthly-report.pdf', pdf);
+      } catch (error) {
+        console.error('clinicDownloadSvgReportPdf failed', error);
+        return false;
+      }
+    };
   </script>
 </head>
 <body>
