@@ -70869,7 +70869,7 @@ jE(){var s=0,r=A.y(t.Le),q,p=this,o,n,m,l,k,j
 var $async$jE=A.z(function(a,b){if(a===1)return A.v(b,r)
 for(;;)switch(s){case 0:l=t.N
 s=3
-return A.h(p.a.i4("GET",A.cr("https://script.google.com/macros/s/AKfycbztQ2P9zf032NknIkXQrzl64rgPtMevhbEYFWI8K8-mVPan8gq8oHnhcw3GOGlWjtvZTQ/exec").iO(A.a3(["action","results","limit","500"],l,t.z)),null),$async$jE)
+return A.h(p.a.i4("GET",A.cr("https://script.google.com/macros/s/AKfycbztQ2P9zf032NknIkXQrzl64rgPtMevhbEYFWI8K8-mVPan8gq8oHnhcw3GOGlWjtvZTQ/exec").iO(A.a3(["action","results","limit","2000"],l,t.z)),null),$async$jE)
 case 3:k=b
 j=k.b
 if(j<200||j>=300)throw A.q(new A.DT("GAS \uc751\ub2f5 \uc624\ub958: HTTP "+j))
@@ -71056,7 +71056,7 @@ jE(){var s=0,r=A.y(t.pu),q,p=this,o,n,m,l,k,j
 var $async$jE=A.z(function(a,b){if(a===1)return A.v(b,r)
 for(;;)switch(s){case 0:l=t.N
 s=3
-return A.h(p.a.i4("GET",A.cr("https://script.google.com/macros/s/AKfycbxAlZPJnXEa1mT_Mvwwgn1qOKEVCgE98mAhNMpiRoiiRvZjEmDqtPWX4r5Qxt0_12rZ/exec").iO(A.a3(["action","results","limit","500"],l,t.z)),null),$async$jE)
+return A.h(p.a.i4("GET",A.cr("https://script.google.com/macros/s/AKfycbxAlZPJnXEa1mT_Mvwwgn1qOKEVCgE98mAhNMpiRoiiRvZjEmDqtPWX4r5Qxt0_12rZ/exec").iO(A.a3(["action","results","limit","2000"],l,t.z)),null),$async$jE)
 case 3:k=b
 j=k.b
 if(j<200||j>=300)throw A.q(new A.DV("GAS \uc751\ub2f5 \uc624\ub958: HTTP "+j))
