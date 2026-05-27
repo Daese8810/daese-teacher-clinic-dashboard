@@ -373,43 +373,6 @@
       }
     };
 
-    function clinicNormalizePngFileName(fileName) {
-      var safeFileName = String(fileName || 'monthly-report.png').trim() || 'monthly-report.png';
-      if (!/\.png$/i.test(safeFileName)) {
-        safeFileName += '.png';
-      }
-      return safeFileName;
-    }
-
-    window.clinicShareSvgReportPngFile = async function(fileName, pagesJson) {
-      try {
-        if (
-          !navigator.share ||
-          !navigator.canShare ||
-          typeof File !== 'function'
-        ) {
-          return 'unsupported';
-        }
-        var rendered = await clinicSvgPagesToPngBlob(pagesJson, 3);
-        var file = new File([rendered.blob], clinicNormalizePngFileName(fileName), {
-          type: 'image/png',
-          lastModified: Date.now()
-        });
-        var shareData = { files: [file] };
-        if (!navigator.canShare(shareData)) {
-          return 'unsupported';
-        }
-        await navigator.share(shareData);
-        return 'shared';
-      } catch (error) {
-        if (error && error.name === 'AbortError') {
-          return 'cancelled';
-        }
-        console.error('clinicShareSvgReportPngFile failed', error);
-        return 'failed';
-      }
-    };
-
     function clinicAsciiBytes(text) {
       return new TextEncoder().encode(String(text || ''));
     }
