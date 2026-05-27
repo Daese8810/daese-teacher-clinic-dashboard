@@ -375,17 +375,34 @@
       return { blob: blob, width: canvas.width, height: canvas.height };
     }
 
+    async function clinicSvgPagesToKakaoCardPngBlob(pagesJson) {
+      var source = await clinicSvgPagesToCanvas(pagesJson, 3);
+      var output = document.createElement('canvas');
+      output.width = 800;
+      output.height = 800;
+      var context = output.getContext('2d');
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, output.width, output.height);
+
+      var targetHeight = 724;
+      var targetWidth = source.width * (targetHeight / source.height);
+      var left = Math.round((output.width - targetWidth) / 2);
+      var top = 48;
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      context.drawImage(source, left, top, targetWidth, targetHeight);
+
+      var blob = await clinicCanvasToBlob(output, 'image/png');
+      return { blob: blob, width: output.width, height: output.height };
+    }
+
     async function clinicSvgPagesToKakaoSizedPngBlob(pagesJson) {
       var maxBytes = 5 * 1024 * 1024;
-      var scales = [3, 2, 1.5];
-      var lastResult = null;
-      for (var index = 0; index < scales.length; index += 1) {
-        lastResult = await clinicSvgPagesToPngBlob(pagesJson, scales[index]);
-        if (lastResult.blob.size <= maxBytes) {
-          return lastResult;
-        }
+      var result = await clinicSvgPagesToKakaoCardPngBlob(pagesJson);
+      if (result.blob.size <= maxBytes) {
+        return result;
       }
-      throw new Error('Kakao image upload limit exceeded: ' + (lastResult ? lastResult.blob.size : 0));
+      throw new Error('Kakao image upload limit exceeded: ' + result.blob.size);
     }
 
     function clinicGetKakaoShareConfig() {
