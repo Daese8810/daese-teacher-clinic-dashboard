@@ -40,7 +40,13 @@
       font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     }
   </style>
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js" integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J" crossorigin="anonymous"></script>
   <script>
+    window.clinicKakaoShareConfig = window.clinicKakaoShareConfig || {
+      javascriptKey: '338dab44139d712450336f4dcc7d162e',
+      linkUrl: 'https://daeseenglish.com/'
+    };
+
     (function disableOldFlutterServiceWorker() {
       if (!('serviceWorker' in navigator)) {
         return;
@@ -329,37 +335,161 @@
       return pages;
     }
 
+    async function clinicSvgPagesToCanvas(pagesJson, scale) {
+      var pages = clinicParseSvgPages(pagesJson);
+      var rendered = [];
+      for (var index = 0; index < pages.length; index += 1) {
+        rendered.push(await clinicSvgTextToCanvas(pages[index], scale));
+      }
+      var gap = rendered.length <= 1 ? 0 : Math.round(72 * scale);
+      var width = rendered.reduce(function(max, item) {
+        return Math.max(max, item.canvas.width);
+      }, 0);
+      var height = rendered.reduce(function(sum, item) {
+        return sum + item.canvas.height;
+      }, 0) + gap * (rendered.length - 1);
+      var output = document.createElement('canvas');
+      output.width = width;
+      output.height = height;
+      var context = output.getContext('2d');
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, width, height);
+      var top = 0;
+      rendered.forEach(function(item) {
+        var left = Math.round((width - item.canvas.width) / 2);
+        context.drawImage(item.canvas, left, top);
+        top += item.canvas.height + gap;
+      });
+      return output;
+    }
+
+    async function clinicSvgPagesToPngBlob(pagesJson, scale) {
+      var canvas = await clinicSvgPagesToCanvas(pagesJson, scale);
+      var blob = await clinicCanvasToBlob(canvas, 'image/png');
+      return { blob: blob, width: canvas.width, height: canvas.height };
+    }
+
+    async function clinicSvgPagesToKakaoSizedPngBlob(pagesJson) {
+      var maxBytes = 5 * 1024 * 1024;
+      var scales = [3, 2, 1.5];
+      var lastResult = null;
+      for (var index = 0; index < scales.length; index += 1) {
+        lastResult = await clinicSvgPagesToPngBlob(pagesJson, scales[index]);
+        if (lastResult.blob.size <= maxBytes) {
+          return lastResult;
+        }
+      }
+      throw new Error('Kakao image upload limit exceeded: ' + (lastResult ? lastResult.blob.size : 0));
+    }
+
+    function clinicKakaoShareConfig() {
+      return window.clinicKakaoShareConfig || {};
+    }
+
+    function clinicEnsureKakaoShareReady() {
+      var config = clinicKakaoShareConfig();
+      var key = String(config.javascriptKey || '').trim();
+      var kakao = window.Kakao;
+      if (!key || !kakao || !kakao.Share || typeof kakao.init !== 'function') {
+        return false;
+      }
+      if (typeof kakao.isInitialized !== 'function' || !kakao.isInitialized()) {
+        kakao.init(key);
+      }
+      return !!(
+        typeof kakao.isInitialized === 'function' &&
+        kakao.isInitialized() &&
+        kakao.Share &&
+        typeof kakao.Share.uploadImage === 'function' &&
+        typeof kakao.Share.sendDefault === 'function'
+      );
+    }
+
+    function clinicFileListFromFile(file) {
+      if (typeof DataTransfer !== 'function') {
+        throw new Error('DataTransfer is not available');
+      }
+      var transfer = new DataTransfer();
+      transfer.items.add(file);
+      return transfer.files;
+    }
+
+    function clinicSafeHttpUrl(url) {
+      var value = String(url || '').trim();
+      if (/^https?:\/\//i.test(value)) {
+        return value;
+      }
+      var configUrl = String(clinicKakaoShareConfig().linkUrl || '').trim();
+      if (/^https?:\/\//i.test(configUrl)) {
+        return configUrl;
+      }
+      return window.location && window.location.origin
+        ? window.location.origin + '/'
+        : 'https://daeseenglish.com/';
+    }
+
     window.clinicDownloadSvgReportPng = async function(fileName, pagesJson) {
       try {
-        var pages = clinicParseSvgPages(pagesJson);
-        var scale = 3;
-        var rendered = [];
-        for (var index = 0; index < pages.length; index += 1) {
-          rendered.push(await clinicSvgTextToCanvas(pages[index], scale));
-        }
-        var gap = rendered.length <= 1 ? 0 : Math.round(72 * scale);
-        var width = rendered.reduce(function(max, item) {
-          return Math.max(max, item.canvas.width);
-        }, 0);
-        var height = rendered.reduce(function(sum, item) {
-          return sum + item.canvas.height;
-        }, 0) + gap * (rendered.length - 1);
-        var output = document.createElement('canvas');
-        output.width = width;
-        output.height = height;
-        var context = output.getContext('2d');
-        context.fillStyle = '#ffffff';
-        context.fillRect(0, 0, width, height);
-        var top = 0;
-        rendered.forEach(function(item) {
-          var left = Math.round((width - item.canvas.width) / 2);
-          context.drawImage(item.canvas, left, top);
-          top += item.canvas.height + gap;
-        });
-        var blob = await clinicCanvasToBlob(output, 'image/png');
-        return clinicDownloadBlob(fileName || 'monthly-report.png', blob);
+        var result = await clinicSvgPagesToPngBlob(pagesJson, 3);
+        return clinicDownloadBlob(fileName || 'monthly-report.png', result.blob);
       } catch (error) {
         console.error('clinicDownloadSvgReportPng failed', error);
+        return false;
+      }
+    };
+
+    window.clinicShareSvgReportPngToKakao = async function(fileName, pagesJson, title, description, linkUrl) {
+      try {
+        if (!clinicEnsureKakaoShareReady()) {
+          return false;
+        }
+        var rendered = await clinicSvgPagesToKakaoSizedPngBlob(pagesJson);
+        var safeFileName = String(fileName || 'monthly-report.png').trim() || 'monthly-report.png';
+        if (!/\.png$/i.test(safeFileName)) {
+          safeFileName += '.png';
+        }
+        var file = new File([rendered.blob], safeFileName, {
+          type: 'image/png',
+          lastModified: Date.now()
+        });
+        var uploaded = await window.Kakao.Share.uploadImage({
+          file: clinicFileListFromFile(file)
+        });
+        var imageUrl = uploaded &&
+          uploaded.infos &&
+          uploaded.infos.original &&
+          uploaded.infos.original.url;
+        if (!imageUrl) {
+          throw new Error('Kakao image URL missing');
+        }
+        var targetUrl = clinicSafeHttpUrl(linkUrl);
+        await window.Kakao.Share.sendDefault({
+          objectType: 'feed',
+          content: {
+            title: String(title || '월말평가 학생 결과지'),
+            description: String(description || '대세영어 월말평가 결과지'),
+            imageUrl: imageUrl,
+            imageWidth: rendered.width,
+            imageHeight: rendered.height,
+            link: {
+              mobileWebUrl: targetUrl,
+              webUrl: targetUrl
+            }
+          },
+          buttons: [
+            {
+              title: '결과지 확인',
+              link: {
+                mobileWebUrl: targetUrl,
+                webUrl: targetUrl
+              }
+            }
+          ],
+          installTalk: true
+        });
+        return true;
+      } catch (error) {
+        console.error('clinicShareSvgReportPngToKakao failed', error);
         return false;
       }
     };
