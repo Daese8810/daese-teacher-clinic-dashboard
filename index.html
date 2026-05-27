@@ -40,19 +40,7 @@
       font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     }
   </style>
-  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js" integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J" crossorigin="anonymous"></script>
   <script>
-    window.clinicKakaoShareConfig =
-      window.clinicKakaoShareConfig &&
-      typeof window.clinicKakaoShareConfig === 'object'
-        ? window.clinicKakaoShareConfig
-        : {};
-    window.clinicKakaoShareConfig.javascriptKey =
-      window.clinicKakaoShareConfig.javascriptKey ||
-      '338dab44139d712450336f4dcc7d162e';
-    window.clinicKakaoShareConfig.linkUrl =
-      window.clinicKakaoShareConfig.linkUrl || 'https://daeseenglish.com/';
-
     (function disableOldFlutterServiceWorker() {
       if (!('serviceWorker' in navigator)) {
         return;
@@ -375,93 +363,6 @@
       return { blob: blob, width: canvas.width, height: canvas.height };
     }
 
-    async function clinicSvgPagesToKakaoCardPngBlob(pagesJson) {
-      var source = await clinicSvgPagesToCanvas(pagesJson, 3);
-      var output = document.createElement('canvas');
-      output.width = 800;
-      output.height = 800;
-      var context = output.getContext('2d');
-      context.fillStyle = '#ffffff';
-      context.fillRect(0, 0, output.width, output.height);
-
-      var sourceCropHeight = Math.round(source.height * (620 / 844));
-      var targetHeight = 784;
-      var targetWidth = source.width * (targetHeight / sourceCropHeight);
-      var left = Math.round((output.width - targetWidth) / 2);
-      var top = 8;
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = 'high';
-      context.drawImage(
-        source,
-        0,
-        0,
-        source.width,
-        sourceCropHeight,
-        left,
-        top,
-        targetWidth,
-        targetHeight
-      );
-
-      var blob = await clinicCanvasToBlob(output, 'image/png');
-      return { blob: blob, width: output.width, height: output.height };
-    }
-
-    async function clinicSvgPagesToKakaoSizedPngBlob(pagesJson) {
-      var maxBytes = 5 * 1024 * 1024;
-      var result = await clinicSvgPagesToKakaoCardPngBlob(pagesJson);
-      if (result.blob.size <= maxBytes) {
-        return result;
-      }
-      throw new Error('Kakao image upload limit exceeded: ' + result.blob.size);
-    }
-
-    function clinicGetKakaoShareConfig() {
-      return window.clinicKakaoShareConfig || {};
-    }
-
-    function clinicEnsureKakaoShareReady() {
-      var config = clinicGetKakaoShareConfig();
-      var key = String(config.javascriptKey || '').trim();
-      var kakao = window.Kakao;
-      if (!key || !kakao || typeof kakao.init !== 'function') {
-        return false;
-      }
-      if (typeof kakao.isInitialized !== 'function' || !kakao.isInitialized()) {
-        kakao.init(key);
-      }
-      return !!(
-        typeof kakao.isInitialized === 'function' &&
-        kakao.isInitialized() &&
-        kakao.Share &&
-        typeof kakao.Share.uploadImage === 'function' &&
-        typeof kakao.Share.sendDefault === 'function'
-      );
-    }
-
-    function clinicFileListFromFile(file) {
-      if (typeof DataTransfer !== 'function') {
-        throw new Error('DataTransfer is not available');
-      }
-      var transfer = new DataTransfer();
-      transfer.items.add(file);
-      return transfer.files;
-    }
-
-    function clinicSafeHttpUrl(url) {
-      var value = String(url || '').trim();
-      if (/^https?:\/\//i.test(value)) {
-        return value;
-      }
-      var configUrl = String(clinicGetKakaoShareConfig().linkUrl || '').trim();
-      if (/^https?:\/\//i.test(configUrl)) {
-        return configUrl;
-      }
-      return window.location && window.location.origin
-        ? window.location.origin + '/'
-        : 'https://daeseenglish.com/';
-    }
-
     window.clinicDownloadSvgReportPng = async function(fileName, pagesJson) {
       try {
         var result = await clinicSvgPagesToPngBlob(pagesJson, 3);
@@ -472,50 +373,40 @@
       }
     };
 
-    window.clinicShareSvgReportPngToKakao = async function(fileName, pagesJson, title, description, linkUrl) {
+    function clinicNormalizePngFileName(fileName) {
+      var safeFileName = String(fileName || 'monthly-report.png').trim() || 'monthly-report.png';
+      if (!/\.png$/i.test(safeFileName)) {
+        safeFileName += '.png';
+      }
+      return safeFileName;
+    }
+
+    window.clinicShareSvgReportPngFile = async function(fileName, pagesJson) {
       try {
-        if (!clinicEnsureKakaoShareReady()) {
-          return false;
+        if (
+          !navigator.share ||
+          !navigator.canShare ||
+          typeof File !== 'function'
+        ) {
+          return 'unsupported';
         }
-        var rendered = await clinicSvgPagesToKakaoSizedPngBlob(pagesJson);
-        var safeFileName = String(fileName || 'monthly-report.png').trim() || 'monthly-report.png';
-        if (!/\.png$/i.test(safeFileName)) {
-          safeFileName += '.png';
-        }
-        var file = new File([rendered.blob], safeFileName, {
+        var rendered = await clinicSvgPagesToPngBlob(pagesJson, 3);
+        var file = new File([rendered.blob], clinicNormalizePngFileName(fileName), {
           type: 'image/png',
           lastModified: Date.now()
         });
-        var uploaded = await window.Kakao.Share.uploadImage({
-          file: clinicFileListFromFile(file)
-        });
-        var imageUrl = uploaded &&
-          uploaded.infos &&
-          uploaded.infos.original &&
-          uploaded.infos.original.url;
-        if (!imageUrl) {
-          throw new Error('Kakao image URL missing');
+        var shareData = { files: [file] };
+        if (!navigator.canShare(shareData)) {
+          return 'unsupported';
         }
-        var targetUrl = clinicSafeHttpUrl(linkUrl);
-        await window.Kakao.Share.sendDefault({
-          objectType: 'feed',
-          content: {
-            title: '\u200B',
-            description: '\u200B',
-            imageUrl: imageUrl,
-            imageWidth: rendered.width,
-            imageHeight: rendered.height,
-            link: {
-              mobileWebUrl: targetUrl,
-              webUrl: targetUrl
-            }
-          },
-          installTalk: true
-        });
-        return true;
+        await navigator.share(shareData);
+        return 'shared';
       } catch (error) {
-        console.error('clinicShareSvgReportPngToKakao failed', error);
-        return false;
+        if (error && error.name === 'AbortError') {
+          return 'cancelled';
+        }
+        console.error('clinicShareSvgReportPngFile failed', error);
+        return 'failed';
       }
     };
 
