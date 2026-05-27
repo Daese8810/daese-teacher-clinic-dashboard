@@ -384,11 +384,11 @@
       context.fillStyle = '#ffffff';
       context.fillRect(0, 0, output.width, output.height);
 
-      var sourceCropHeight = Math.round(source.height * (620 / 844));
-      var targetHeight = 784;
+      var sourceCropHeight = Math.round(source.height * (560 / 844));
+      var targetHeight = 792;
       var targetWidth = source.width * (targetHeight / sourceCropHeight);
       var left = Math.round((output.width - targetWidth) / 2);
-      var top = 8;
+      var top = 4;
       context.imageSmoothingEnabled = true;
       context.imageSmoothingQuality = 'high';
       context.drawImage(
