@@ -42,10 +42,16 @@
   </style>
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.1/kakao.min.js" integrity="sha384-OL+ylM/iuPLtW5U3XcvLSGhE8JzReKDank5InqlHGWPhb4140/yrBw0bg0y7+C9J" crossorigin="anonymous"></script>
   <script>
-    window.clinicKakaoShareConfig = window.clinicKakaoShareConfig || {
-      javascriptKey: '338dab44139d712450336f4dcc7d162e',
-      linkUrl: 'https://daeseenglish.com/'
-    };
+    window.clinicKakaoShareConfig =
+      window.clinicKakaoShareConfig &&
+      typeof window.clinicKakaoShareConfig === 'object'
+        ? window.clinicKakaoShareConfig
+        : {};
+    window.clinicKakaoShareConfig.javascriptKey =
+      window.clinicKakaoShareConfig.javascriptKey ||
+      '338dab44139d712450336f4dcc7d162e';
+    window.clinicKakaoShareConfig.linkUrl =
+      window.clinicKakaoShareConfig.linkUrl || 'https://daeseenglish.com/';
 
     (function disableOldFlutterServiceWorker() {
       if (!('serviceWorker' in navigator)) {
@@ -382,15 +388,15 @@
       throw new Error('Kakao image upload limit exceeded: ' + (lastResult ? lastResult.blob.size : 0));
     }
 
-    function clinicKakaoShareConfig() {
+    function clinicGetKakaoShareConfig() {
       return window.clinicKakaoShareConfig || {};
     }
 
     function clinicEnsureKakaoShareReady() {
-      var config = clinicKakaoShareConfig();
+      var config = clinicGetKakaoShareConfig();
       var key = String(config.javascriptKey || '').trim();
       var kakao = window.Kakao;
-      if (!key || !kakao || !kakao.Share || typeof kakao.init !== 'function') {
+      if (!key || !kakao || typeof kakao.init !== 'function') {
         return false;
       }
       if (typeof kakao.isInitialized !== 'function' || !kakao.isInitialized()) {
@@ -419,7 +425,7 @@
       if (/^https?:\/\//i.test(value)) {
         return value;
       }
-      var configUrl = String(clinicKakaoShareConfig().linkUrl || '').trim();
+      var configUrl = String(clinicGetKakaoShareConfig().linkUrl || '').trim();
       if (/^https?:\/\//i.test(configUrl)) {
         return configUrl;
       }
