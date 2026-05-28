@@ -113,13 +113,7 @@
       return String(content || '').replace(/__LOGO_URL__/g, clinicLogoUrl());
     }
 
-    window.clinicPrintWorksheet = function(title, rightHeader, content) {
-      var printWindow = window.open('', '_blank', 'width=960,height=1200');
-      if (!printWindow) {
-        window.print();
-        return true;
-      }
-
+    function writeWorksheetPrintWindow(printWindow, title, content) {
       var source = hydrateWorksheetHtml(content);
       if (source.indexOf('<!DOCTYPE html>') < 0 && source.indexOf('<html') < 0) {
         source = [
@@ -161,6 +155,88 @@
       }
 
       return true;
+    }
+
+    window.clinicPrintWorksheet = function(title, rightHeader, content) {
+      var printWindow = window.open('', '_blank', 'width=960,height=1200');
+      if (!printWindow) {
+        return false;
+      }
+
+      return writeWorksheetPrintWindow(printWindow, title, content);
+    };
+
+    window.clinicPreparedPrintWindows = {};
+
+    window.clinicPrepareWorksheetPrintWindow = function(title) {
+      try {
+        var printWindow = window.open('', '_blank', 'width=960,height=1200');
+        if (!printWindow) {
+          return '';
+        }
+        var token = 'clinic-print-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+        window.clinicPreparedPrintWindows[token] = printWindow;
+        var doc = printWindow.document;
+        doc.open();
+        doc.write([
+          '<!DOCTYPE html>',
+          '<html lang="ko">',
+          '<head>',
+          '<meta charset="UTF-8">',
+          '<title>' + (title || 'Worksheet') + '</title>',
+          '<style>',
+          'body { color: #252525; font-family: Arial, "Malgun Gothic", sans-serif; padding: 28px; }',
+          '</style>',
+          '</head>',
+          '<body>정답지를 영작 관리에 업로드하는 중입니다.</body>',
+          '</html>'
+        ].join(''));
+        doc.close();
+        return token;
+      } catch (error) {
+        return '';
+      }
+    };
+
+    window.clinicCompletePreparedWorksheetPrintWindow = function(token, title, rightHeader, content) {
+      try {
+        var printWindow = window.clinicPreparedPrintWindows[token];
+        delete window.clinicPreparedPrintWindows[token];
+        if (!printWindow || printWindow.closed) {
+          return false;
+        }
+        return writeWorksheetPrintWindow(printWindow, title, content);
+      } catch (error) {
+        return false;
+      }
+    };
+
+    window.clinicCancelPreparedWorksheetPrintWindow = function(token, message) {
+      try {
+        var printWindow = window.clinicPreparedPrintWindows[token];
+        delete window.clinicPreparedPrintWindows[token];
+        if (!printWindow || printWindow.closed) {
+          return true;
+        }
+        if (!message) {
+          printWindow.close();
+          return true;
+        }
+        var doc = printWindow.document;
+        doc.open();
+        doc.write([
+          '<!DOCTYPE html>',
+          '<html lang="ko">',
+          '<head><meta charset="UTF-8"><title>인쇄 취소</title></head>',
+          '<body style="font-family: Arial, &quot;Malgun Gothic&quot;, sans-serif; padding: 28px;">',
+          String(message),
+          '</body></html>'
+        ].join(''));
+        doc.close();
+        return true;
+      } catch (error) {
+        return false;
+      }
     };
 
     window.clinicDownloadWorksheetFile = function(fileName, content) {
