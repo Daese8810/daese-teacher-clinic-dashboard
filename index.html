@@ -91,6 +91,26 @@
       } catch (error) {}
     };
 
+    window.clinicLoadDaeseEnglishGuideDraft = function() {
+      try {
+        return window.localStorage.getItem('clinic_daese_english_guides_draft_v1') || '{}';
+      } catch (error) {
+        return '{}';
+      }
+    };
+
+    window.clinicSaveDaeseEnglishGuideDraft = function(json) {
+      try {
+        window.localStorage.setItem('clinic_daese_english_guides_draft_v1', json || '{}');
+      } catch (error) {}
+    };
+
+    window.clinicClearDaeseEnglishGuideDraft = function() {
+      try {
+        window.localStorage.removeItem('clinic_daese_english_guides_draft_v1');
+      } catch (error) {}
+    };
+
     window.clinicLoadExamScores = function() {
       try {
         return window.localStorage.getItem('clinic_exam_scores_v1') || '{}';
