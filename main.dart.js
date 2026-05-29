@@ -10881,7 +10881,7 @@ o=!1
 if(p.length===0){r=!0
 continue}if(g.length===0)n=0
 else n=r?17:7
-m=A.U("^([0-9]+)[.)]\\s*(.+)$",!0,!1,!1).cv(p)
+m=A.U("^([0-9]+[.)])\\s*(.+)$",!0,!1,!1).cv(p)
 if(m!=null){l=m.b
 k=l[1]
 if(k==null)k=""
