@@ -80461,7 +80461,7 @@ case"starting":return 0.14
 case"direct":case"ai_generation":return a.e>1?0.58:0.36
 case"server_validation":return 0.76
 case"retrying":return 0.82
-case"partial_repair":return 0.9
+case"partial_repair":case"strict_single_repair":return 0.9
 case"completed":return 0.92
 case"failed":return this.y1}s=a.a
 if(s==="succeeded")return 0.92
