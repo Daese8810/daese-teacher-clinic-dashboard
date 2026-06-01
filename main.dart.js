@@ -81839,7 +81839,7 @@ if(n===a3||n===a4){b=n===a4?3:2
 for(n=k.f,n=new A.im(n,A.l(n).j("im<1>")).gb6(),n=n.gU(n);n.u();){j=n.gJ()
 r.push(a2.WV(j.a)+" "+B.c.W(a2.Lm(j.b,b)," ..... "))}}else if(n==="vocab_abc_box"||n==="grammar_abc_box"){r.push("        (A)               (B)               (C)")
 for(n=k.f,n=new A.im(n,A.l(n).j("im<1>")).gb6(),n=n.gU(n);n.u();){j=n.gJ()
-r.push(a2.WV(j.a)+" "+a2.aGz(j.b))}}else{if(n!=="vocab_underline")n=!(!j||B.a.k(k.b)==="insertion")
+r.push(a2.WV(j.a)+" "+a2.aGz(j.b))}}else{if(n!=="vocab_underline")n=!(!j||B.a.k(k.b)==="insertion")&&n!=="sentence_deletion"
 else n=!1
 if(n)for(n=k.f,n=new A.im(n,A.l(n).j("im<1>")).gb6(),n=n.gU(n);n.u();){j=n.gJ()
 r.push(a2.WV(j.a)+" "+a2.x7(j.b))}}}for(q=p.length,m=0;m<p.length;p.length===q||(0,A.D)(p),++m){k=p[m]
@@ -84043,17 +84043,17 @@ A.baK.prototype={
 $1(a){return a.length!==0},
 $S:3}
 A.baL.prototype={
-$1(a){var s,r,q,p,o,n=this,m=n.a,l=m.abk(a),k=m.aN9(a),j=m.abj(a),i=B.a.k(a.c)!=="vocab_underline"&&!l&&!k&&!j
-if(i){s=a.f
-r=new A.im(s,A.l(s).j("im<1>")).gb6().eW(0,new A.baI(m,n.b),t.N).cK(0)}else r=""
-q=l?m.azv(a,n.b):""
-p=k?m.azq(a,n.b):""
-s=n.b
-o=m.azt(a,s,n.c)
-s=m.azu(a,s,n.d)
-if(i)m='<div class="choices">'+r+"</div>"
-else m=k?p:q
-return u.A+o+"\n          "+s+"\n          "+m+"\n        </section>\n      "},
+$1(a){var s,r,q,p,o=this,n=o.a,m=n.abk(a),l=n.aN9(a),k=n.abj(a),j=B.a.k(a.c),i=j!=="vocab_underline"&&!m&&!l&&!k&&j!=="sentence_deletion"
+if(i){j=a.f
+s=new A.im(j,A.l(j).j("im<1>")).gb6().eW(0,new A.baI(n,o.b),t.N).cK(0)}else s=""
+r=m?n.azv(a,o.b):""
+q=l?n.azq(a,o.b):""
+j=o.b
+p=n.azt(a,j,o.c)
+j=n.azu(a,j,o.d)
+if(i)n='<div class="choices">'+s+"</div>"
+else n=l?q:r
+return u.A+p+"\n          "+j+"\n          "+n+"\n        </section>\n      "},
 $S:675}
 A.baI.prototype={
 $1(a){var s=this.a
