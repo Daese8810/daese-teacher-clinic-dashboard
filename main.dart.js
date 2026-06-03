@@ -83852,7 +83852,7 @@ return s==null?0:s},
 aAE(a,b,c){var s,r,q,p,o,n=this,m='<p class="passage">',l=n.a9n(a)
 if(l.length===0)return""
 s=B.a.k(a.c)
-if(s==="vocab_underline"||B.a.b4(s,"grammar_underline"))return m+A.e(c.$1(l))+"</p>"
+if(s==="vocab_underline"||s==="implied_meaning"||B.a.b4(s,"grammar_underline"))return m+A.e(c.$1(l))+"</p>"
 if(n.aco(a)){r=n.agc(l)
 if(!r.c||r.b.length===0)return m+A.e(b.$1(l))+"</p>"
 s=r.a
