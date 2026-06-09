@@ -92787,8 +92787,8 @@ s=m==="\ud559\uc0dd"?m:m+" \ud559\uc0dd"
 r=n.ab4(a,c==null?n.p3:c)
 q=r.length===0?"- \uc785\ub825\ub41c \ud074\ub9ac\ub2c9 \uacb0\uacfc\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.":new A.j(r,new A.bPs(),A.k(r).j("j<1,c>")).P(0,"\n")
 p=B.a.dC(a.Q)
-o=(b==null?n.p2:b)&&B.a.k(p).length!==0?"\n[\uacfc\uc81c \uc548\ub0b4]\n"+p+"\n":""
-return B.a.k(s+"\uc758 Daily Status Report \uc548\ub0b4\ub4dc\ub9bd\ub2c8\ub2e4.\n"+A.pv(n.id)+"\n\n[\ucd9c\uacb0]\n- "+n.ab2(a)+"\n\n[\uacfc\uc81c]\n- "+n.ab5(a)+"\n"+o+"\n\n[\uad50\uc7ac]\n- "+n.ab6(a)+"\n\n[\ud074\ub9ac\ub2c9 \uacb0\uacfc]\n"+q+"\n\n\ub300\uc138\uc601\uc5b4\ud559\uc6d0(\uc0bc\uc1a1\ucea0\ud37c\uc2a4)\n")},
+o=(b==null?n.p2:b)&&B.a.k(p).length!==0?"\n\n[\uacfc\uc81c \uc548\ub0b4]\n"+p:""
+return B.a.k(s+"\uc758 Daily Status Report \uc548\ub0b4\ub4dc\ub9bd\ub2c8\ub2e4.\n"+A.pv(n.id)+"\n\n[\ucd9c\uacb0]\n- "+n.ab2(a)+"\n\n[\uacfc\uc81c \uc774\ud589]\n- "+n.ab5(a)+"\n\n[\uad50\uc7ac]\n- "+n.ab6(a)+"\n\n[\ud074\ub9ac\ub2c9 \uacb0\uacfc]\n"+q+o+"\n\n\ub300\uc138\uc601\uc5b4\ud559\uc6d0(\uc0bc\uc1a1\ucea0\ud37c\uc2a4)\n\n\ub300\uc138\uc601\uc5b4 \uc5b4\ud50c \ub2e4\uc6b4\ub85c\ub4dc\n1) \uc548\ub4dc\ub85c\uc774\ub4dc\nhttps://play.google.com/store/apps/details?id=com.daese.voca&pcampaignid=web_share\n\n2) \uc544\uc774\ud3f0\nhttps://apps.apple.com/kr/app/%EB%8C%80%EC%84%B8%EC%98%81%EC%96%B4/id6761740009\n")},
 aIX(a,b){return this.We(a,null,b)},
 aIW(a,b){return this.We(a,b,null)},
 ab7(a){return this.We(a,null,null)},
