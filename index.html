@@ -556,8 +556,7 @@
       return new Blob(chunks, { type: 'application/pdf' });
     }
 
-    window.clinicDownloadSvgReportPdf = async function(fileName, pagesJson) {
-      try {
+    async function clinicBuildSvgReportPdfBlob(pagesJson) {
         var pages = clinicParseSvgPages(pagesJson);
         var scale = 2.4;
         var rendered = [];
@@ -567,7 +566,35 @@
           rendered.push(page);
           imageBytes.push(await clinicImageBytesFromCanvas(page.canvas));
         }
-        var pdf = clinicCreateImagePdf(rendered, imageBytes);
+      return clinicCreateImagePdf(rendered, imageBytes);
+    }
+
+    function clinicBlobToDataUrl(blob) {
+      return new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function() {
+          resolve(String(reader.result || ''));
+        };
+        reader.onerror = function() {
+          reject(reader.error || new Error('Failed to read blob'));
+        };
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    window.clinicBuildSvgReportPdfDataUrl = async function(pagesJson) {
+      try {
+        var pdf = await clinicBuildSvgReportPdfBlob(pagesJson);
+        return await clinicBlobToDataUrl(pdf);
+      } catch (error) {
+        console.error('clinicBuildSvgReportPdfDataUrl failed', error);
+        return '';
+      }
+    };
+
+    window.clinicDownloadSvgReportPdf = async function(fileName, pagesJson) {
+      try {
+        var pdf = await clinicBuildSvgReportPdfBlob(pagesJson);
         return clinicDownloadBlob(fileName || 'monthly-report.pdf', pdf);
       } catch (error) {
         console.error('clinicDownloadSvgReportPdf failed', error);
