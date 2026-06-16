@@ -37,7 +37,7 @@
   <style>
     html,
     body {
-      font-family: "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     }
   </style>
   <script>
@@ -144,7 +144,7 @@
           '<title>' + (title || 'Worksheet') + '</title>',
           '<style>',
           '@page { size: A4; margin: 14mm; }',
-          'body { color: #252525; font-family: "Pretendard", Arial, "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; line-height: 1.55; margin: 0; }',
+          'body { color: #252525; font-family: Arial, "Malgun Gothic", sans-serif; line-height: 1.55; margin: 0; }',
           'pre { font: inherit; margin: 0; white-space: pre-wrap; }',
           '</style>',
           '</head>',
@@ -205,7 +205,7 @@
           '<meta charset="UTF-8">',
           '<title>' + (title || 'Worksheet') + '</title>',
           '<style>',
-          'body { color: #252525; font-family: "Pretendard", Arial, "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; padding: 28px; }',
+          'body { color: #252525; font-family: Arial, "Malgun Gothic", sans-serif; padding: 28px; }',
           '</style>',
           '</head>',
           '<body>정답지를 영작 관리에 업로드하는 중입니다.</body>',
@@ -248,7 +248,7 @@
           '<!DOCTYPE html>',
           '<html lang="ko">',
           '<head><meta charset="UTF-8"><title>인쇄 취소</title></head>',
-          '<body style="font-family: &quot;Pretendard&quot;, Arial, &quot;Malgun Gothic&quot;, &quot;Apple SD Gothic Neo&quot;, &quot;Noto Sans KR&quot;, sans-serif; padding: 28px;">',
+          '<body style="font-family: Arial, &quot;Malgun Gothic&quot;, sans-serif; padding: 28px;">',
           String(message),
           '</body></html>'
         ].join(''));
@@ -556,7 +556,8 @@
       return new Blob(chunks, { type: 'application/pdf' });
     }
 
-    async function clinicBuildSvgReportPdfBlob(pagesJson) {
+    window.clinicDownloadSvgReportPdf = async function(fileName, pagesJson) {
+      try {
         var pages = clinicParseSvgPages(pagesJson);
         var scale = 2.4;
         var rendered = [];
@@ -566,35 +567,7 @@
           rendered.push(page);
           imageBytes.push(await clinicImageBytesFromCanvas(page.canvas));
         }
-      return clinicCreateImagePdf(rendered, imageBytes);
-    }
-
-    function clinicBlobToDataUrl(blob) {
-      return new Promise(function(resolve, reject) {
-        var reader = new FileReader();
-        reader.onload = function() {
-          resolve(String(reader.result || ''));
-        };
-        reader.onerror = function() {
-          reject(reader.error || new Error('Failed to read blob'));
-        };
-        reader.readAsDataURL(blob);
-      });
-    }
-
-    window.clinicBuildSvgReportPdfDataUrl = async function(pagesJson) {
-      try {
-        var pdf = await clinicBuildSvgReportPdfBlob(pagesJson);
-        return await clinicBlobToDataUrl(pdf);
-      } catch (error) {
-        console.error('clinicBuildSvgReportPdfDataUrl failed', error);
-        return '';
-      }
-    };
-
-    window.clinicDownloadSvgReportPdf = async function(fileName, pagesJson) {
-      try {
-        var pdf = await clinicBuildSvgReportPdfBlob(pagesJson);
+        var pdf = clinicCreateImagePdf(rendered, imageBytes);
         return clinicDownloadBlob(fileName || 'monthly-report.pdf', pdf);
       } catch (error) {
         console.error('clinicDownloadSvgReportPdf failed', error);
