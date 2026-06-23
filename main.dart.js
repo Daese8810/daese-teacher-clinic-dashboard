@@ -109485,7 +109485,7 @@ r=A.a([s?A.cZ(m,A.e(p,n,n,n,n,B.Z,n,n,n),r,q):A.aV(m,A.e(p,n,n,n,n,B.Z,n,n,n),r,
 if(o.e)r.push(A.lq(n,A.L(B.Q,B.aSD,B.i,n,n,new A.N(B.b0,n,A.a0(B.n,2),n,n,n,B.bY),n,18,n,n,n,n,18),n,n,n,-5,-6,n))
 return A.fb(B.bo,r,B.i,B.bD,n)}}
 A.aAK.prototype={
-t(a){return A.nI("assets/\ubcf4\ubb3c\uc0c1\uc790.png",B.dg,22,24)}}
+t(a){return A.nI("assets/treasure_chest.png",B.dg,22,24)}}
 A.M8.prototype={
 t(a){var s=this,r=null,q=A.d2H(s.e,s.f,s.d,s.r),p=A.bP(a,r,t.l).w.a,o=Math.min(Math.max(320,p.a-44),900),n=Math.min(p.b*0.82,720),m=A.v(18),l=s.c,k=A.v(16),j=t.p
 l=A.a3(A.bW(A.jf(new A.aB(B.adp,A.O(A.a([new A.aoT(l,q,r),B.O,A.L(r,B.bgZ,B.aD,r,r,new A.N(r,r,A.a0(B.hh.P(0.48),1),k,A.a([new A.cl(0,B.ap,B.j8.P(0.12),B.nY,12)],t.V),r,B.m),r,r,r,r,r,r,r),B.O,new A.aoS(l,q,r)],j),B.u,B.d,B.f),r),r,r,B.bjN,B.aq),r,B.w,r,r,r,B.K),n,o)
@@ -109547,7 +109547,7 @@ $S:71}
 A.aoT.prototype={
 t(a){return A.c0(new A.bvm(this))}}
 A.bvm.prototype={
-$2(a,b){var s,r,q=null,p=b.b,o=p>=720,n=this.a,m=n.d,l=[new A.Fl(q,"assets/\ubc30.png","\ud604\uc7ac \uc704\uce58",""+m.a+"\uba85",n.c.a,q),new A.Fl(B.GI,q,"\ub0a8\uc740 \uac70\ub9ac",m.ga4Z(),B.fE,q),new A.Fl(B.l8,q,"\ub098\uc544\uac08 \ubc29\ud5a5",m.garI(),m.garH(),q),new A.Fl(B.js,q,"\ubcf4\ubb3c \uc9c0\uc810",""+m.b+"\uba85",B.di,q)]
+$2(a,b){var s,r,q=null,p=b.b,o=p>=720,n=this.a,m=n.d,l=[new A.Fl(q,"assets/treasure_boat.png","\ud604\uc7ac \uc704\uce58",""+m.a+"\uba85",n.c.a,q),new A.Fl(B.GI,q,"\ub0a8\uc740 \uac70\ub9ac",m.ga4Z(),B.fE,q),new A.Fl(B.l8,q,"\ub098\uc544\uac08 \ubc29\ud5a5",m.garI(),m.garH(),q),new A.Fl(B.js,q,"\ubcf4\ubb3c \uc9c0\uc810",""+m.b+"\uba85",B.di,q)]
 m=A.a([],t.p)
 for(n=(p-36)/4,s=0;s<4;++s){r=l[s]
 m.push(new A.bp(o?n:p,q,r,q))}return A.b2(B.W,m,B.a3,12,12)},
@@ -109577,7 +109577,7 @@ A.aoR.prototype={
 t(a){return new A.a77(1.4953703703703705,A.c0(new A.bvk()),null)}}
 A.bvk.prototype={
 $2(a,b){var s=null,r=b.b,q=new A.a6(r,b.d),p=B.h.ba(r*0.105,48,92),o=B.h.ba(r*0.078,38,70)
-return A.fb(B.bo,A.a([A.nI("assets/\ubcf4\ubb3c\uc9c0\ub3c4.png",B.D_,s,s),A.nI("assets/\ubcf4\ubb3c\uc9c0\ub3c4 (\uc120).png",B.D_,s,s),new A.a4e(q,B.aDP,o,1.0912863070539418,A.nI("assets/\ubcf4\ubb3c\uc0c1\uc790.png",B.dg,s,s),s),new A.a4e(q,B.aDQ,p,1.0808080808080809,A.nI("assets/\ubc30.png",B.dg,s,s),s)],t.p),B.j,B.AK,s)},
+return A.fb(B.bo,A.a([A.nI("assets/treasure_map.png",B.D_,s,s),A.nI("assets/treasure_map_route.png",B.D_,s,s),new A.a4e(q,B.aDP,o,1.0912863070539418,A.nI("assets/treasure_chest.png",B.dg,s,s),s),new A.a4e(q,B.aDQ,p,1.0808080808080809,A.nI("assets/treasure_boat.png",B.dg,s,s),s)],t.p),B.j,B.AK,s)},
 $S:434}
 A.a4e.prototype={
 t(a){var s=this,r=s.e,q=r/s.f,p=s.c,o=p.a,n=s.d
