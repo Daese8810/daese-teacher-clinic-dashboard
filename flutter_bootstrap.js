@@ -35,8 +35,20 @@ if (!window._flutter) {
 }
 _flutter.buildConfig = {"engineRevision":"77e2e94772b6eb43759e34ed1ad7da4674e19cab","builds":[{"compileTarget":"dart2js","renderer":"canvaskit","mainJsPath":"main.dart.js"},{}]};
 
-_flutter.loader.load({
-  serviceWorkerSettings: {
-    serviceWorkerVersion: "1334688374" /* Flutter's service worker is deprecated and will be removed in a future Flutter release. */
+
+(function loadClinicFlutterApp() {
+  var buildId = String(window.clinicBootstrapBuildId || '').trim();
+  var buildConfig = window._flutter && window._flutter.buildConfig;
+  if (buildId && buildConfig && Array.isArray(buildConfig.builds)) {
+    buildConfig.builds.forEach(function(build) {
+      if (!build || typeof build.mainJsPath !== 'string') {
+        return;
+      }
+      var mainUrl = new URL(build.mainJsPath, document.baseURI);
+      mainUrl.searchParams.set('clinic_build', buildId);
+      build.mainJsPath = mainUrl.toString();
+    });
   }
-});
+
+  _flutter.loader.load();
+})();

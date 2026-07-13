@@ -63,6 +63,220 @@
       });
     })();
 
+    (function configureWebBuildUpdates() {
+      var currentBuild = null;
+      var buildCheckTimer = null;
+      var buildCheckInFlight = false;
+      var updateBlocked = false;
+
+      function normalizeBuildManifest(value) {
+        if (!value || typeof value !== 'object') {
+          return null;
+        }
+        var version = String(value.version || '').trim();
+        var buildNumber = Number(value.build_number ?? value.buildNumber);
+        if (!version || !Number.isInteger(buildNumber) || buildNumber < 0) {
+          return null;
+        }
+        return {
+          version: version,
+          buildNumber: buildNumber,
+          id: version + '+' + buildNumber
+        };
+      }
+
+      async function fetchPublishedBuild() {
+        var manifestUrl = new URL('version.json', document.baseURI);
+        manifestUrl.searchParams.set(
+          'clinic_cache_bust',
+          String(Date.now())
+        );
+        var response = await fetch(manifestUrl.toString(), {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        });
+        if (!response.ok) {
+          throw new Error('version manifest HTTP ' + response.status);
+        }
+        var manifest = normalizeBuildManifest(await response.json());
+        if (!manifest) {
+          throw new Error('invalid version manifest');
+        }
+        return manifest;
+      }
+
+      function isNewerBuild(latest, loaded) {
+        if (latest.buildNumber !== loaded.buildNumber) {
+          return latest.buildNumber > loaded.buildNumber;
+        }
+        return latest.version !== loaded.version;
+      }
+
+      async function reloadForBuild(build) {
+        try {
+          if ('serviceWorker' in navigator) {
+            var registrations = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(registrations.map(function(registration) {
+              return registration.unregister();
+            }));
+          }
+          if (window.caches) {
+            var cacheKeys = await caches.keys();
+            await Promise.all(cacheKeys.map(function(key) {
+              return caches.delete(key);
+            }));
+          }
+        } catch (error) {
+          console.warn('Failed to clear old web build caches', error);
+        }
+
+        var nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set('clinic_web_build', build.id);
+        window.location.replace(nextUrl.toString());
+      }
+
+      function blockForPublishedBuild(latest) {
+        if (updateBlocked) {
+          return;
+        }
+        updateBlocked = true;
+        if (buildCheckTimer !== null) {
+          window.clearInterval(buildCheckTimer);
+          buildCheckTimer = null;
+        }
+
+        var overlay = document.createElement('div');
+        overlay.id = 'clinic-web-update-blocker';
+        overlay.setAttribute('role', 'alertdialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.style.cssText = [
+          'position:fixed',
+          'inset:0',
+          'z-index:2147483647',
+          'display:flex',
+          'align-items:center',
+          'justify-content:center',
+          'padding:24px',
+          'background:rgba(37,37,37,0.58)',
+          'font-family:Pretendard,Malgun Gothic,Apple SD Gothic Neo,sans-serif'
+        ].join(';');
+
+        var panel = document.createElement('div');
+        panel.style.cssText = [
+          'width:min(440px,100%)',
+          'box-sizing:border-box',
+          'padding:28px',
+          'border-radius:20px',
+          'background:#fff',
+          'box-shadow:0 20px 60px rgba(0,0,0,0.24)',
+          'color:#252525'
+        ].join(';');
+
+        var title = document.createElement('h2');
+        title.textContent = '새 버전이 배포되었습니다';
+        title.style.cssText = 'margin:0 0 12px;font-size:22px;line-height:1.35';
+
+        var message = document.createElement('p');
+        message.textContent =
+          '데이터 충돌을 막기 위해 현재 화면의 편집을 중지했습니다. 새로고침 후 다시 저장해 주세요.';
+        message.style.cssText =
+          'margin:0 0 20px;color:#6f625c;font-size:15px;line-height:1.6';
+
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = '새 버전으로 새로고침';
+        button.style.cssText = [
+          'width:100%',
+          'min-height:48px',
+          'border:0',
+          'border-radius:14px',
+          'background:#ff6b22',
+          'color:#fff',
+          'font:700 16px Pretendard,Malgun Gothic,sans-serif',
+          'cursor:pointer'
+        ].join(';');
+        button.addEventListener('click', function() {
+          button.disabled = true;
+          button.textContent = '새로고침 중...';
+          reloadForBuild(latest);
+        });
+
+        panel.appendChild(title);
+        panel.appendChild(message);
+        panel.appendChild(button);
+        overlay.appendChild(panel);
+
+        Array.from(document.body.children).forEach(function(child) {
+          child.inert = true;
+        });
+        document.body.appendChild(overlay);
+        button.focus();
+      }
+
+      async function checkForPublishedBuild() {
+        if (!currentBuild || buildCheckInFlight || updateBlocked) {
+          return;
+        }
+        buildCheckInFlight = true;
+        try {
+          var latest = await fetchPublishedBuild();
+          if (isNewerBuild(latest, currentBuild)) {
+            blockForPublishedBuild(latest);
+          }
+        } catch (error) {
+          console.warn('Failed to check the published web build', error);
+        } finally {
+          buildCheckInFlight = false;
+        }
+      }
+
+      window.clinicStartWebBuildGuard = function(version, buildNumber) {
+        var loaded = normalizeBuildManifest({
+          version: version,
+          build_number: buildNumber
+        });
+        if (!loaded) {
+          return;
+        }
+        currentBuild = loaded;
+        if (buildCheckTimer === null) {
+          buildCheckTimer = window.setInterval(
+            checkForPublishedBuild,
+            60 * 1000
+          );
+          document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+              checkForPublishedBuild();
+            }
+          });
+          window.addEventListener('focus', checkForPublishedBuild);
+          window.addEventListener('pageshow', checkForPublishedBuild);
+        }
+        checkForPublishedBuild();
+      };
+
+      window.clinicLoadFlutterApp = async function() {
+        var buildId;
+        try {
+          buildId = (await fetchPublishedBuild()).id;
+        } catch (error) {
+          console.warn('Failed to load the web build manifest', error);
+          buildId = 'uncached-' + Date.now();
+        }
+        window.clinicBootstrapBuildId = buildId;
+
+        var bootstrapUrl = new URL('flutter_bootstrap.js', document.baseURI);
+        bootstrapUrl.searchParams.set('clinic_build', buildId);
+        var script = document.createElement('script');
+        script.src = bootstrapUrl.toString();
+        script.async = true;
+        document.body.appendChild(script);
+      };
+    })();
+
     window.clinicLoadGenerationHistory = function() {
       try {
         return window.localStorage.getItem('clinic_writing_generation_history_v1') || '[]';
@@ -598,6 +812,8 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
-  <script src="flutter_bootstrap.js" async></script>
+  <script>
+    window.clinicLoadFlutterApp();
+  </script>
 </body>
 </html>
