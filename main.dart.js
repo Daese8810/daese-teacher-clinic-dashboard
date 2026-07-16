@@ -111019,10 +111019,10 @@ n=A.ZT(7,g,B.fF,q,B.GZ,"\ub0a8\uc740 \uac70\ub9ac",f.gasJ())
 m=f.gasA()
 m=A.ZT(7,g,f.gasz(),q,B.lf,"\ub098\uc544\uac08 \ubc29\ud5a5",m)
 l=A.ZT(5,"assets/treasure_chest.png",B.dm,q,g,"\ubcf4\ubb3c \uc9c0\uc810",""+f.b+"\uba85")
-k=A.ZT(7,g,B.cw,q,B.ahG,"\uc131\uc7a5 \uacbd\ub85c","\ubb38\uc758 "+f.c+" \xb7 \ud14c\uc2a4\ud2b8 "+f.d+"\n\uc2e0\uaddc "+f.e)
+k=A.ZT(7,g,B.cw,q,B.ahG,"\uc131\uc7a5 \uacbd\ub85c","\ubb38\uc758 "+f.c+"\uba85 \xb7 \ud14c\uc2a4\ud2b8 "+f.d+"\uba85\n\uc2e0\uaddc "+f.e+"\uba85")
 j=f.f
 p=A.aEY(j,p+j)
-i=[o,n,m,l,k,A.ZT(7,g,f.gasz(),q,B.Hr,"\uc704\ud5d8 \uad6c\uac04","\ud1f4\uc6d0 "+j+" \xb7 "+p)]
+i=[o,n,m,l,k,A.ZT(7,g,f.gasz(),q,B.Hr,"\uc704\ud5d8 \uad6c\uac04","\ud1f4\uc6d0 "+j+"\uba85 \xb7 "+p)]
 p=A.a([],t.p)
 for(h=0;h<6;++h)p.push(new A.br(r,g,i[h],g))
 return A.b1(B.V,p,B.a3,10,10)},
