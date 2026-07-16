@@ -67,7 +67,11 @@
       var currentBuild = null;
       var buildCheckTimer = null;
       var buildCheckInFlight = false;
-      var updateBlocked = false;
+      var updatePromptVisible = false;
+      var snoozedBuildId = '';
+      var snoozedUntil = 0;
+      var updateSnoozeStorageKey = 'clinic_web_update_snooze_v1';
+      var updateSnoozeMs = 30 * 60 * 1000;
 
       function normalizeBuildManifest(value) {
         if (!value || typeof value !== 'object') {
@@ -115,6 +119,54 @@
         return latest.version !== loaded.version;
       }
 
+      function loadSnoozeState() {
+        try {
+          var raw = window.localStorage.getItem(updateSnoozeStorageKey);
+          if (!raw) {
+            return;
+          }
+          var parsed = JSON.parse(raw);
+          if (!parsed || typeof parsed !== 'object') {
+            return;
+          }
+          snoozedBuildId = String(parsed.buildId || '');
+          snoozedUntil = Number(parsed.until || 0);
+        } catch (error) {}
+      }
+
+      function clearSnoozeState() {
+        snoozedBuildId = '';
+        snoozedUntil = 0;
+        try {
+          window.localStorage.removeItem(updateSnoozeStorageKey);
+        } catch (error) {}
+      }
+
+      function snoozeBuild(build) {
+        snoozedBuildId = build.id;
+        snoozedUntil = Date.now() + updateSnoozeMs;
+        try {
+          window.localStorage.setItem(
+            updateSnoozeStorageKey,
+            JSON.stringify({
+              buildId: snoozedBuildId,
+              until: snoozedUntil
+            })
+          );
+        } catch (error) {}
+      }
+
+      function isSnoozedBuild(build) {
+        if (snoozedBuildId !== build.id) {
+          return false;
+        }
+        if (Date.now() < snoozedUntil) {
+          return true;
+        }
+        clearSnoozeState();
+        return false;
+      }
+
       async function reloadForBuild(build) {
         try {
           if ('serviceWorker' in navigator) {
@@ -135,18 +187,15 @@
 
         var nextUrl = new URL(window.location.href);
         nextUrl.searchParams.set('clinic_web_build', build.id);
+        nextUrl.searchParams.set('clinic_cache_bust', String(Date.now()));
         window.location.replace(nextUrl.toString());
       }
 
       function blockForPublishedBuild(latest) {
-        if (updateBlocked) {
+        if (updatePromptVisible || isSnoozedBuild(latest)) {
           return;
         }
-        updateBlocked = true;
-        if (buildCheckTimer !== null) {
-          window.clearInterval(buildCheckTimer);
-          buildCheckTimer = null;
-        }
+        updatePromptVisible = true;
 
         var overlay = document.createElement('div');
         overlay.id = 'clinic-web-update-blocker';
@@ -166,7 +215,7 @@
 
         var panel = document.createElement('div');
         panel.style.cssText = [
-          'width:min(440px,100%)',
+          'width:min(520px,100%)',
           'box-sizing:border-box',
           'padding:28px',
           'border-radius:20px',
@@ -181,43 +230,90 @@
 
         var message = document.createElement('p');
         message.textContent =
-          '데이터 충돌을 막기 위해 현재 화면의 편집을 중지했습니다. 새로고침 후 다시 저장해 주세요.';
+          '지금 업데이트하면 캐시를 비우고 새 화면을 다시 불러옵니다. 작업 중인 내용이 있으면 마무리한 뒤 직접 새로고침해 주세요.';
         message.style.cssText =
           'margin:0 0 20px;color:#6f625c;font-size:15px;line-height:1.6';
 
-        var button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = '새 버전으로 새로고침';
-        button.style.cssText = [
-          'width:100%',
+        var actions = document.createElement('div');
+        actions.style.cssText = [
+          'display:flex',
+          'gap:10px',
+          'flex-wrap:wrap'
+        ].join(';');
+
+        var primaryButton = document.createElement('button');
+        primaryButton.type = 'button';
+        primaryButton.textContent = '지금 업데이트 하기';
+        primaryButton.style.cssText = [
+          'flex:1 1 190px',
           'min-height:48px',
+          'padding:10px 16px',
           'border:0',
           'border-radius:14px',
           'background:#ff6b22',
           'color:#fff',
-          'font:700 16px Pretendard,Malgun Gothic,sans-serif',
+          'font:700 15px Pretendard,Malgun Gothic,sans-serif',
+          'line-height:1.3',
+          'white-space:normal',
           'cursor:pointer'
         ].join(';');
-        button.addEventListener('click', function() {
-          button.disabled = true;
-          button.textContent = '새로고침 중...';
+        primaryButton.addEventListener('click', function() {
+          primaryButton.disabled = true;
+          secondaryButton.disabled = true;
+          primaryButton.textContent = '업데이트 중...';
           reloadForBuild(latest);
         });
 
+        var secondaryButton = document.createElement('button');
+        secondaryButton.type = 'button';
+        secondaryButton.textContent = '나중에 직접하기(컨트롤 +F5)';
+        secondaryButton.style.cssText = [
+          'flex:1 1 220px',
+          'min-height:48px',
+          'padding:10px 16px',
+          'border:1px solid #d8d0ca',
+          'border-radius:14px',
+          'background:#fff',
+          'color:#4f4641',
+          'font:700 15px Pretendard,Malgun Gothic,sans-serif',
+          'line-height:1.3',
+          'white-space:normal',
+          'cursor:pointer'
+        ].join(';');
+
+        var inertElements = [];
+        function closeOverlay() {
+          inertElements.forEach(function(child) {
+            child.inert = false;
+          });
+          overlay.remove();
+          updatePromptVisible = false;
+        }
+
+        secondaryButton.addEventListener('click', function() {
+          snoozeBuild(latest);
+          closeOverlay();
+        });
+
+        actions.appendChild(primaryButton);
+        actions.appendChild(secondaryButton);
         panel.appendChild(title);
         panel.appendChild(message);
-        panel.appendChild(button);
+        panel.appendChild(actions);
         overlay.appendChild(panel);
 
         Array.from(document.body.children).forEach(function(child) {
-          child.inert = true;
+          if (!child.inert) {
+            child.inert = true;
+            inertElements.push(child);
+          }
         });
         document.body.appendChild(overlay);
-        button.focus();
+        primaryButton.focus();
       }
 
       async function checkForPublishedBuild() {
-        if (!currentBuild || buildCheckInFlight || updateBlocked) {
+        if (!currentBuild || buildCheckInFlight || updatePromptVisible) {
           return;
         }
         buildCheckInFlight = true;
@@ -241,6 +337,7 @@
         if (!loaded) {
           return;
         }
+        loadSnoozeState();
         currentBuild = loaded;
         if (buildCheckTimer === null) {
           buildCheckTimer = window.setInterval(
