@@ -426,8 +426,34 @@
       return new URL('assets/assets/logo.jpg', window.location.href).href;
     }
 
+    function clinicWordTestLogoUrl() {
+      return new URL('assets/assets/transparentlogo.png', window.location.href).href;
+    }
+
     function hydrateWorksheetHtml(content) {
-      return String(content || '').replace(/__LOGO_URL__/g, clinicLogoUrl());
+      return String(content || '')
+        .replace(/__WORD_TEST_LOGO_URL__/g, clinicWordTestLogoUrl())
+        .replace(/__LOGO_URL__/g, clinicLogoUrl());
+    }
+
+    function waitForWorksheetImages(doc) {
+      var images = Array.from(doc.images || []);
+      if (images.length === 0) {
+        return Promise.resolve();
+      }
+      var loaded = Promise.all(images.map(function(image) {
+        if (image.complete) {
+          return Promise.resolve();
+        }
+        return new Promise(function(resolve) {
+          image.addEventListener('load', resolve, { once: true });
+          image.addEventListener('error', resolve, { once: true });
+        });
+      }));
+      var timeout = new Promise(function(resolve) {
+        setTimeout(resolve, 1500);
+      });
+      return Promise.race([loaded, timeout]);
     }
 
     function writeWorksheetPrintWindow(printWindow, title, content) {
@@ -461,15 +487,14 @@
         printWindow.print();
       };
 
-      if (doc.fonts && doc.fonts.ready) {
-        doc.fonts.ready.then(function() {
-          setTimeout(printWhenReady, 100);
-        }).catch(function() {
-          setTimeout(printWhenReady, 250);
-        });
-      } else {
+      var fontsReady = doc.fonts && doc.fonts.ready
+        ? doc.fonts.ready.catch(function() {})
+        : Promise.resolve();
+      Promise.all([fontsReady, waitForWorksheetImages(doc)]).then(function() {
+        setTimeout(printWhenReady, 100);
+      }).catch(function() {
         setTimeout(printWhenReady, 250);
-      }
+      });
 
       return true;
     }
