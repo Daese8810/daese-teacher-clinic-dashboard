@@ -12726,7 +12726,7 @@ cKX(){var s=0,r=A.t(t.H),q,p,o,n,m,l,k
 var $async$cKX=A.u(function(a,b){if(a===1)return A.p(b,r)
 for(;;)switch(s){case 0:if($.aR==null)A.cHD()
 $.aR.toString
-A.dta(38,"1.0.34")
+A.dta(39,"1.0.35")
 if($.aR==null)A.cHD()
 q=$.aR
 q.toString
@@ -15491,11 +15491,11 @@ a7=a2?m+A.dlh(305,460,264,134,a0,A.cXc(a0,6),b4):m
 a8=A.vy(26,606,543,164,"\uc885\ud569 \uc758\uacac",b4)
 b1=A.m0(40,641,515,113,b7[0],7,null)
 b7=b7[5]
-l=A.y(null,null,null,null,null,null,null,null,"Pretendard",null,null,13.6,null,null,A.cXj(700),null,null,!0,null,null,null,null,null,null,null,null)
-k=A.dkp(0,13.6,86,475,9,1.22,l,a3)
+l=A.y(null,null,null,null,null,null,null,null,"Pretendard",null,null,13.6,null,null,A.cXj(600),null,null,!0,null,null,null,null,null,null,null,null)
+k=A.dkp(!1,0,13.6,86,475,9,1.28,l,a3)
 b5=k.b
 b6=k.c
-b5=a8+b1+'<clipPath id="a4-management-comment-26-606"><rect x="42" y="656" width="511" height="98" /></clipPath>'+A.dlc(60,662+k.d+b5*0.92,k.a,"a4-management-comment-26-606",b7,b6,475,l.U0(b5,b6),b5,700)
+b5=a8+b1+'<clipPath id="a4-management-comment-26-606"><rect x="42" y="656" width="511" height="98" /></clipPath>'+A.dlc(60,662+k.d+b5*0.92,k.a,"a4-management-comment-26-606",b7,b6,475,l.U0(b5,b6),b5,600)
 b5=a7+(b5.charCodeAt(0)==0?b5:b5)+A.cJJ(b4)+"</svg>"
 a7=t.N
 b6=t.K
@@ -15654,15 +15654,14 @@ r=B.c.ky(s)
 q=r.b
 B.c.A(s,new A.Hl(A.dks(r.a,f,Math.max(1,e-q)),q))
 return s},
-dkp(a,b,c,d,e,f,g,h){var s,r,q,p,o,n=Math.max(1,d),m=Math.max(1,c),l=Math.max(e,b)
-for(s=m+0.01,r=l;r>=e;){q=A.cXI(h,g.U0(r,f),n,a)
-p=q.length*r*f
-if(p<=s)return new A.avL(q,r,f,Math.max(0,(m-p)/2))
-r-=0.2}q=A.cXI(h,g.U0(e,f),n,a)
-s=Math.max(1,B.h.eM(m/(e*f)))*e
-o=s*f>m?Math.max(1,m/s):f
-q=A.dkv(e,o,q,m,n,g.U0(e,o))
-return new A.avL(q,e,o,Math.max(0,(m-q.length*e*o)/2))},
+dkp(a,b,c,d,e,f,g,h,i){var s,r,q,p,o=Math.max(1,e),n=Math.max(1,d),m=Math.max(f,c)
+for(s=n+0.01,r=m;r>=f;){q=A.cXI(i,h.U0(r,g),o,b)
+if(q.length*r*g<=s)return new A.avL(q,r,g,0)
+r-=0.2}q=A.cXI(i,h.U0(f,g),o,b)
+s=Math.max(1,B.h.eM(n/(f*g)))*f
+p=s*g>n?Math.max(1,n/s):g
+q=A.dkv(f,p,q,n,o,h.U0(f,p))
+return new A.avL(q,f,p,0)},
 dlc(a,b,c,d,e,a0,a1,a2,a3,a4){var s,r,q,p,o,n,m,l,k,j,i,h,g=null,f='<text x="'+A.e(a)+'" y="'+A.e(b)+'" fill="'+e+u.F+A.e(a3)+'" font-weight="'+a4+'" text-anchor="start"'+(' clip-path="url(#'+d+')"')+">"
 for(s=a3*a0,r=0;r<c.length;++r,f=n){q=c[r]
 p=q.b
@@ -37019,7 +37018,7 @@ s=A.b(s,s)
 if(b)s.h(0,"Content-Type","application/json")
 if(d!=null&&B.a.j(d).length!==0)s.h(0,"If-None-Match",B.a.j(d))
 s.h(0,"X-Dashboard-Client-Source",A.dmD(e==null?A.cWp():e))
-s.h(0,"X-Dashboard-Client-Version","1.0.34+38")
+s.h(0,"X-Dashboard-Client-Version","1.0.35+39")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a)s.h(0,"X-Dashboard-Compact-Legacy","1")
 if(c)s.h(0,"X-Dashboard-Fallback-Full","1")
@@ -147516,7 +147515,7 @@ ajB(a,b){var s=t.N
 s=A.b(s,s)
 s.h(0,"Accept","application/json")
 if(b)s.h(0,"Content-Type","application/json; charset=utf-8")
-s.h(0,"X-Dashboard-Client-Version","1.0.34+38")
+s.h(0,"X-Dashboard-Client-Version","1.0.35+39")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a!=null&&B.a.j(a).length!==0)s.h(0,"If-None-Match",a)
 return s},
