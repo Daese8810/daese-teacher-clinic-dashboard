@@ -12721,7 +12721,7 @@ cKV(){var s=0,r=A.t(t.H),q,p,o,n,m,l,k
 var $async$cKV=A.u(function(a,b){if(a===1)return A.p(b,r)
 for(;;)switch(s){case 0:if($.aR==null)A.cHB()
 $.aR.toString
-A.dta(42,"1.0.38")
+A.dta(43,"1.0.39")
 if($.aR==null)A.cHB()
 q=$.aR
 q.toString
@@ -37033,7 +37033,7 @@ s=A.b(s,s)
 if(b)s.h(0,"Content-Type","application/json")
 if(d!=null&&B.a.j(d).length!==0)s.h(0,"If-None-Match",B.a.j(d))
 s.h(0,"X-Dashboard-Client-Source",A.dmB(e==null?A.cWn():e))
-s.h(0,"X-Dashboard-Client-Version","1.0.38+42")
+s.h(0,"X-Dashboard-Client-Version","1.0.39+43")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a)s.h(0,"X-Dashboard-Compact-Legacy","1")
 if(c)s.h(0,"X-Dashboard-Fallback-Full","1")
@@ -105839,7 +105839,7 @@ o=b.length===0?B.zg:b
 n=e?"\n\n[\ub515\ud14c\uc774\uc158 \uc81c\ucd9c]\n"+new A.k(o,new A.c8R(),A.l(o).k("k<1,d>")).L(0,"\n"):""
 m=k.agR(d)
 l=a.at?"\n\n[\ud074\ub9ac\ub2c9 \uacb0\uacfc]\n"+r:""
-return B.a.j(s+"\uc758 Daily Status Report \uc548\ub0b4\ub4dc\ub9bd\ub2c8\ub2e4.\n"+A.kT(k.k4)+"\n\n[\ucd9c\uacb0]\n- "+k.NX(a)+"\n\n[\uacfc\uc81c \uc774\ud589]\n- "+k.NZ(a)+"\n"+n+"\n\n[\uad50\uc7ac]\n- "+k.O_(a)+"\n"+m+"\n"+l+p+"\n\n\ub300\uc138\uc601\uc5b4\ud559\uc6d0(\uc0bc\uc1a1\ucea0\ud37c\uc2a4)\n\n\ub300\uc138\uc601\uc5b4 \uc5b4\ud50c \ub2e4\uc6b4\ub85c\ub4dc\n1) \uc548\ub4dc\ub85c\uc774\ub4dc\nhttps://play.google.com/store/apps/details?id=com.daese.voca&pcampaignid=web_share\n\n2) \uc544\uc774\ud3f0\nhttps://apps.apple.com/kr/app/%EB%8C%80%EC%84%B8%EC%98%81%EC%96%B4/id6761740009\n")},
+return B.a.j(s+"\uc758 Daily Status Report \uc548\ub0b4\ub4dc\ub9bd\ub2c8\ub2e4.\n"+A.kT(k.k4)+"\n\n[\ucd9c\uacb0]\n- "+k.NX(a)+"\n\n[\uacfc\uc81c \uc774\ud589]\n- "+k.NZ(a)+"\n"+n+"\n\n[\uad50\uc7ac]\n- "+k.O_(a)+"\n"+m+"\n"+l+p+"\n\n\ub300\uc138\uc601\uc5b4\ud559\uc6d0(\uc0bc\uc1a1\ucea0\ud37c\uc2a4)\n")},
 aRv(a,b,c,d,e){var s,r,q,p,o,n,m,l=this,k=A.a([],t.s),j=new A.c8S(k),i=e.c
 if(i.l(0,"attendance"))j.$2("\ucd9c\uacb0","- "+l.NX(a))
 if(i.l(0,"homework"))j.$2("\uacfc\uc81c \uc774\ud589","- "+l.NZ(a))
@@ -147558,7 +147558,7 @@ ajB(a,b){var s=t.N
 s=A.b(s,s)
 s.h(0,"Accept","application/json")
 if(b)s.h(0,"Content-Type","application/json; charset=utf-8")
-s.h(0,"X-Dashboard-Client-Version","1.0.38+42")
+s.h(0,"X-Dashboard-Client-Version","1.0.39+43")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a!=null&&B.a.j(a).length!==0)s.h(0,"If-None-Match",a)
 return s},
