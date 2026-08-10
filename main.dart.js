@@ -12721,7 +12721,7 @@ cKV(){var s=0,r=A.t(t.H),q,p,o,n,m,l,k
 var $async$cKV=A.u(function(a,b){if(a===1)return A.p(b,r)
 for(;;)switch(s){case 0:if($.aR==null)A.cHB()
 $.aR.toString
-A.dta(43,"1.0.39")
+A.dta(44,"1.0.40")
 if($.aR==null)A.cHB()
 q=$.aR
 q.toString
@@ -16883,7 +16883,7 @@ r=B.a.j(A.J(a.b,o,"")).toLowerCase()
 o=A.D(p,!0,!1,!1,!1)
 q=B.a.j(A.J(b.b,o,"")).toLowerCase()
 return r.length===0||q.length===0||r===q},
-cXA(a,b,c,d,e){var s,r,q,p,o,n=A.cIE(a,b,null,"")
+cXA(a,b,c,d,e){var s,r,q,p,o,n=A.cIE(a,b,c,d)
 if(n!=null){s=A.cqK(d,n)
 if(s!=null){r=n.gcd()
 q=n.b
@@ -37033,7 +37033,7 @@ s=A.b(s,s)
 if(b)s.h(0,"Content-Type","application/json")
 if(d!=null&&B.a.j(d).length!==0)s.h(0,"If-None-Match",B.a.j(d))
 s.h(0,"X-Dashboard-Client-Source",A.dmB(e==null?A.cWn():e))
-s.h(0,"X-Dashboard-Client-Version","1.0.39+43")
+s.h(0,"X-Dashboard-Client-Version","1.0.40+44")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a)s.h(0,"X-Dashboard-Compact-Legacy","1")
 if(c)s.h(0,"X-Dashboard-Fallback-Full","1")
@@ -94981,8 +94981,7 @@ $S:649}
 A.cqp.prototype={
 $1(a){var s,r,q,p,o,n=a.length
 if(n===0)return null
-s=this.a
-if(s!=null)for(r=0;r<a.length;a.length===n||(0,A.C)(a),++r){q=a[r]
+for(s=this.a,r=0;r<a.length;a.length===n||(0,A.C)(a),++r){q=a[r]
 p=A.IA(q.y)
 o=p.length===1?B.c.gY(p):null
 if(o===A.bG(s))return q}return B.c.gY(a)},
@@ -147558,7 +147557,7 @@ ajB(a,b){var s=t.N
 s=A.b(s,s)
 s.h(0,"Accept","application/json")
 if(b)s.h(0,"Content-Type","application/json; charset=utf-8")
-s.h(0,"X-Dashboard-Client-Version","1.0.39+43")
+s.h(0,"X-Dashboard-Client-Version","1.0.40+44")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a!=null&&B.a.j(a).length!==0)s.h(0,"If-None-Match",a)
 return s},
