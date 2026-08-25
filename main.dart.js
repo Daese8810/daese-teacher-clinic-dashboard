@@ -13185,7 +13185,7 @@ cPB(){var s=0,r=A.t(t.H),q,p,o,n,m,l,k
 var $async$cPB=A.u(function(a,b){if(a===1)return A.p(b,r)
 for(;;)switch(s){case 0:if($.aS==null)A.cMg()
 $.aS.toString
-A.dyv(111,"1.0.107")
+A.dyv(112,"1.0.108")
 if($.aS==null)A.cMg()
 q=$.aS
 q.toString
@@ -37945,7 +37945,7 @@ s=A.b(s,s)
 if(b)s.h(0,"Content-Type","application/json")
 if(d!=null&&B.a.j(d).length!==0)s.h(0,"If-None-Match",B.a.j(d))
 s.h(0,"X-Dashboard-Client-Source",A.drH(e==null?A.d0d():e))
-s.h(0,"X-Dashboard-Client-Version","1.0.107+111")
+s.h(0,"X-Dashboard-Client-Version","1.0.108+112")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a)s.h(0,"X-Dashboard-Compact-Legacy","1")
 if(c)s.h(0,"X-Dashboard-Fallback-Full","1")
@@ -144279,7 +144279,7 @@ return A.L(r,A.bY(new A.bUT(s,new A.awD(r),new A.auS(s.at,s.ax,s.ch,s.CW,s.cx,!0
 A.bUT.prototype={
 $2(a,b){var s=this,r=null,q=s.a,p=new A.aFz(q.w,q.x,q.y,q.z,q.Q,q.as,r),o=new A.auQ(q.e,q.f,q.r,r)
 q=b.b
-if(q>=1680)return A.M(A.a([A.Q(s.b,3),B.fe,A.Q(p,1),B.fe,A.Q(o,1),B.fe,new A.V(178,r,s.c,r)],t.p),B.k,B.d,B.e,0,r)
+if(q>=1680)return A.M(A.a([A.Q(s.b,3),B.fe,A.Q(p,6),B.fe,A.Q(o,6),B.fe,new A.V(178,r,s.c,r)],t.p),B.k,B.d,B.e,0,r)
 if(q>=1040){q=t.p
 return A.O(A.a([A.M(A.a([A.Q(s.b,3),B.fe,new A.V(220,r,s.c,r)],q),B.C,B.d,B.e,0,r),B.bN,A.M(A.a([A.Q(p,1),B.fe,A.Q(o,1)],q),B.C,B.d,B.e,0,r)],q),B.u,r,B.d,B.e,0,B.m)}if(q<600)return A.O(A.a([s.b,B.D,s.c,B.D,p,B.D,o],t.p),B.u,r,B.d,B.e,0,B.m)
 return A.O(A.a([s.b,B.bN,p,B.bN,o,B.bN,new A.ca(B.cy,r,r,new A.V(220,r,s.c,r),r)],t.p),B.u,r,B.d,B.e,0,B.m)},
@@ -150975,7 +150975,7 @@ akW(a,b){var s=t.N
 s=A.b(s,s)
 s.h(0,"Accept","application/json")
 if(b)s.h(0,"Content-Type","application/json; charset=utf-8")
-s.h(0,"X-Dashboard-Client-Version","1.0.107+111")
+s.h(0,"X-Dashboard-Client-Version","1.0.108+112")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a!=null&&B.a.j(a).length!==0)s.h(0,"If-None-Match",a)
 return s},
