@@ -13185,7 +13185,7 @@ cPI(){var s=0,r=A.u(t.H),q,p,o,n,m,l,k
 var $async$cPI=A.v(function(a,b){if(a===1)return A.q(b,r)
 for(;;)switch(s){case 0:if($.aS==null)A.cMn()
 $.aS.toString
-A.dyC(118,"1.0.114")
+A.dyC(119,"1.0.115")
 if($.aS==null)A.cMn()
 q=$.aS
 q.toString
@@ -16197,7 +16197,7 @@ j=r[0]
 i=r[1]
 h=r[3]
 r=r[4]
-r=g+('<rect x="'+A.e(o)+'" y="'+A.e(n-14)+'" width="36" height="20" rx="10" fill="'+m+'"'+(' stroke="'+l+'" stroke-width="1"')+" />")+k+A.aIl(j+36+7,i,h,s[5],8.8,r-36-7,5.2,900)}g+=A.dk(a+c/2,b+d-13,"\uc544\ub08c\uc5c6\uc774 \uac00\ub974\uce58\uaca0\uc2b5\ub2c8\ub2e4","middle",s[4],1,null,9.5,900)
+r=g+('<rect x="'+A.e(o)+'" y="'+A.e(n-14)+'" width="36" height="20" rx="10" fill="'+m+'"'+(' stroke="'+l+'" stroke-width="1"')+" />")+k+A.aIl(j+36+7,i,h,s[5],8.8,r-36-7,5.2,900)}g+=A.dk(a+c/2,b+d-13,"\uc544\ub08c\uc5c6\uc774 \uac00\ub974\uce58\uaca0\uc2b5\ub2c8\ub2e4","middle","#000000",1,null,19,900)
 return g.charCodeAt(0)==0?g:g},
 dqm(a2,a3,a4,a5,a6){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a='<polygon points="',a0='" fill="none" stroke="',a1='" stroke-width="1" />'
 if(a5.length===0)return""
@@ -38035,7 +38035,7 @@ s=A.b(s,s)
 if(b)s.h(0,"Content-Type","application/json")
 if(d!=null&&B.a.j(d).length!==0)s.h(0,"If-None-Match",B.a.j(d))
 s.h(0,"X-Dashboard-Client-Source",A.drO(e==null?A.d0k():e))
-s.h(0,"X-Dashboard-Client-Version","1.0.114+118")
+s.h(0,"X-Dashboard-Client-Version","1.0.115+119")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a)s.h(0,"X-Dashboard-Compact-Legacy","1")
 if(c)s.h(0,"X-Dashboard-Fallback-Full","1")
@@ -151094,7 +151094,7 @@ akX(a,b){var s=t.N
 s=A.b(s,s)
 s.h(0,"Accept","application/json")
 if(b)s.h(0,"Content-Type","application/json; charset=utf-8")
-s.h(0,"X-Dashboard-Client-Version","1.0.114+118")
+s.h(0,"X-Dashboard-Client-Version","1.0.115+119")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a!=null&&B.a.j(a).length!==0)s.h(0,"If-None-Match",a)
 return s},
