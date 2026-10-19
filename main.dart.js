@@ -13305,7 +13305,7 @@ cQf(){var s=0,r=A.u(t.H),q,p,o,n,m,l,k
 var $async$cQf=A.v(function(a,b){if(a===1)return A.q(b,r)
 for(;;)switch(s){case 0:if($.aQ==null)A.cMU()
 $.aQ.toString
-A.dzz(151,"1.0.147")
+A.dzz(152,"1.0.148")
 if($.aQ==null)A.cMU()
 q=$.aQ
 q.toString
@@ -38618,7 +38618,7 @@ s=A.b(s,s)
 if(b)s.h(0,"Content-Type","application/json")
 if(d!=null&&B.a.k(d).length!==0)s.h(0,"If-None-Match",B.a.k(d))
 s.h(0,"X-Dashboard-Client-Source",A.dsB(e==null?A.d15():e))
-s.h(0,"X-Dashboard-Client-Version","1.0.147+151")
+s.h(0,"X-Dashboard-Client-Version","1.0.148+152")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a)s.h(0,"X-Dashboard-Compact-Legacy","1")
 if(c)s.h(0,"X-Dashboard-Fallback-Full","1")
@@ -121098,7 +121098,7 @@ r=f.as
 q=t.O
 p=t.QO
 o=A.a([],p)
-for(n=t.Vb,m=0;m<19;++m){l=B.j6[m]
+for(n=t.Vb,m=0;m<20;++m){l=B.j6[m]
 o.push(new A.fF(l,l,n))}k=t.N
 o=A.Q(A.e3(B.mc,B.Dw,r,!0,!0,e,new A.b8("inquiry-school-"+A.e(r),q),new A.c2P(f),o,k),1)
 r=f.at
@@ -121288,7 +121288,7 @@ q=h.y
 p=t.O
 o=t.QO
 n=A.a([],o)
-for(m=t.Vb,l=0;l<19;++l){k=B.j6[l]
+for(m=t.Vb,l=0;l<20;++l){k=B.j6[l]
 n.push(new A.fF(k,k,m))}j=t.N
 n=A.Q(A.e3(B.mc,B.Dw,q,!0,!0,g,new A.b8("placement-school-"+A.e(q),p),new A.c37(h),n,j),1)
 q=h.z
@@ -121582,7 +121582,7 @@ o=o?g:new A.c3Y(h)
 c=A.tG(e,!1,B.dE,"\uc2e0\uaddc \ubb38\uc758 / \uc785\ud559\ud14c\uc2a4\ud2b8 \uac80\uc0c9",o,h.gb95(),c)
 o=h.ay
 n=A.a([],t.QO)
-for(m=t.Vb,q=0;q<19;++q){l=B.j6[q]
+for(m=t.Vb,q=0;q<20;++q){l=B.j6[q]
 n.push(new A.fF(l,l,m))}o=A.M(A.a([A.Q(A.e3(B.mc,B.Dw,o,!0,!0,g,new A.b8("movement-school-"+A.e(o),t.O),new A.c3Z(h),n,t.N),1),B.U,A.Q(A.b5(g,B.w,!1,g,!0,B.j,g,A.b7(),h.e,g,g,g,g,g,2,B.tl,B.x,!0,g,!0,g,!1,g,B.O,g,g,g,g,g,g,g,g,g,1,g,g,!1,"\u2022",g,g,g,g,g,!1,g,g,!1,g,!0,g,B.M,g,g,g,g,g,g,g,g,g,g,g,g,!0,B.G,g,B.T,g,B.dY,g,g),1)],s),B.k,B.d,B.e,0,g)
 n=A.b5(g,B.w,!1,g,!0,B.j,g,A.b7(),h.f,g,g,g,g,g,2,B.oo,B.x,!0,g,!0,g,!1,g,B.O,g,g,g,g,g,g,g,g,g,1,g,g,!1,"\u2022",g,g,g,g,g,!1,g,g,!1,g,!0,g,B.M,g,g,g,g,g,g,g,g,g,g,g,g,!0,B.G,g,B.T,g,B.dY,g,g)
 m=A.M(A.a([A.Q(A.b5(g,B.w,!1,g,!0,B.j,g,A.b7(),h.w,g,g,g,g,g,2,B.Ll,B.x,!0,g,!0,g,!1,g,B.O,g,g,g,g,g,B.l5,g,g,g,1,g,g,!1,"\u2022",g,g,g,g,g,!1,g,g,!1,g,!0,g,B.M,g,g,g,g,g,g,g,g,g,g,g,g,!0,B.G,g,B.T,g,B.dY,g,g),1),B.U,A.Q(A.b5(g,B.w,!1,g,!0,B.j,g,A.b7(),h.x,g,g,g,g,g,2,B.Lp,B.x,!0,g,!0,g,!1,g,B.O,g,g,g,g,g,B.l5,g,g,g,1,g,g,!1,"\u2022",g,g,g,g,g,!1,g,g,!1,g,!0,g,B.M,g,g,g,g,g,g,g,g,g,g,g,g,!0,B.G,g,B.T,g,B.dY,g,g),1)],s),B.k,B.d,B.e,0,g)
@@ -151728,7 +151728,7 @@ akQ(a,b){var s=t.N
 s=A.b(s,s)
 s.h(0,"Accept","application/json")
 if(b)s.h(0,"Content-Type","application/json; charset=utf-8")
-s.h(0,"X-Dashboard-Client-Version","1.0.147+151")
+s.h(0,"X-Dashboard-Client-Version","1.0.148+152")
 s.h(0,"X-Student-Data-Protocol","2")
 if(a!=null&&B.a.k(a).length!==0)s.h(0,"If-None-Match",a)
 return s},
@@ -246859,6 +246859,7 @@ B.O2=s([0,41,61,101,131,181,251,301,360],t.n)
 B.axM=s(["schedule","academyCalendar","attendance","assignments","curriculum","schoolView","classroomReservation"],t.s)
 B.axN=s(["\u0642\u0628\u0644 \u0627\u0644\u0645\u064a\u0644\u0627\u062f","\u0645\u064a\u0644\u0627\u062f\u064a"],t.s)
 B.Ak=s(["\uc9111","\uc9112","\uc9113"],t.s)
+B.j6=s(["\uc2e0\uc6d0\ucd08","\uc6d0\ud765\ucd08","\uc9c0\ucd95\ucd08","\uc624\uae08\ucd08","\uc0bc\uc1a1\ucd08","\ucc3d\ub989\ucd08","\ub3d9\uc0b0\ucd08","\uad00\uc0b0\ucd08","\uc2e0\uc6d0\uc911","\uc6d0\ud765\uc911","\uace0\uc591\uc911","\uace0\uc81c\uc911","\uc9c0\ucd95\uc911","\ubaa9\uc554\uc911","\uc2e0\uc6d0\uace0","\ub3d9\uc0b0\uace0","\ub2a5\uace1\uace0","\ubb34\uc6d0\uace0","\ud589\uc2e0\uace0","\uace0\uc591\uc77c\uace0"],t.s)
 B.O3=s(["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"],t.s)
 B.buF=new A.yp(0,0)
 B.buK=new A.yp(1,0.05)
@@ -247352,7 +247353,6 @@ B.btK=new A.ym("futureDiscussion","\ucd94\ud6c4 \ub17c\uc758\ud560 \ub0b4\uc6a9"
 B.btJ=new A.ym("completed","\ub17c\uc758 \uc644\ub8cc")
 B.btH=new A.ym("etc","\uae30\ud0c0")
 B.ku=s([B.btI,B.btL,B.btG,B.btK,B.btJ,B.btH],A.aw("K<ym>"))
-B.j6=s(["\uc2e0\uc6d0\ucd08","\uc6d0\ud765\ucd08","\uc9c0\ucd95\ucd08","\uc624\uae08\ucd08","\uc0bc\uc1a1\ucd08","\ucc3d\ub989\ucd08","\ub3d9\uc0b0\ucd08","\uad00\uc0b0\ucd08","\uc2e0\uc6d0\uc911","\uc6d0\ud765\uc911","\uace0\uc591\uc911","\uace0\uc81c\uc911","\uc9c0\ucd95\uc911","\uc2e0\uc6d0\uace0","\ub3d9\uc0b0\uace0","\ub2a5\uace1\uace0","\ubb34\uc6d0\uace0","\ud589\uc2e0\uace0","\uace0\uc591\uc77c\uace0"],t.s)
 B.Pj=s(["\u1007","\u1016","\u1019","\u1027","\u1019","\u1007","\u1007","\u1029","\u1005","\u1021","\u1014","\u1012"],t.s)
 B.Pk=s(["EEEE, d 'de' MMMM 'de' y","d 'de' MMMM 'de' y","d MMM y","d/M/yy"],t.s)
 B.azN=s(["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],t.s)
